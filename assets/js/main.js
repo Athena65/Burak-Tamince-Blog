@@ -218,4 +218,69 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  /* age calculator */
+  document.addEventListener('DOMContentLoaded', function () {
+    const birthDate = new Date(2002, 6, 10); // 10 Temmuz 2002 (Ay 0 tabanlıdır, 6 = Temmuz)
+    const today = new Date(); // Bugünün tarihi
+  
+    let ageYears = today.getFullYear() - birthDate.getFullYear();
+    let ageMonths = today.getMonth() - birthDate.getMonth();
+    let ageDays = today.getDate() - birthDate.getDate();
+  
+    // Eğer doğum günü bu yıl henüz kutlanmadıysa yılı bir azalt
+    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+      ageYears--;
+    }
+  
+    // Yaşı span'a yazdır
+    document.getElementById('age').textContent = ageYears;
+  });
+  
+  /* dynamic website */
+  document.addEventListener('DOMContentLoaded', function () {
+    // Mevcut sitenin URL'sini alın
+    const currentURL = window.location.hostname;
+  
+    // URL'yi ilgili span'a yazdırın
+    document.getElementById('website').textContent = currentURL;
+  });
+
+  /* arrange skills */
+  document.addEventListener("DOMContentLoaded", function () {
+    // Skills section kontrolü
+    const skillsSection = document.querySelector("#skills");
+    if (!skillsSection) {
+      console.warn("Skills section not found. Exiting script.");
+      return; // Skills section bulunamazsa işlem yapılmaz
+    }
+
+    // Sol sütun ve sağ sütunları seç
+    const leftColumn = skillsSection.querySelector(".col-lg-6:first-child");
+    const rightColumn = skillsSection.querySelector(".col-lg-6:last-child");
+
+    if (!leftColumn || !rightColumn) {
+      console.warn("Left or right column not found. Exiting script.");
+      return; // Sütunlar bulunamazsa işlem yapılmaz
+    }
+
+    // Bir sütunu sırala ve yeniden düzenle
+    const sortSkills = (column) => {
+      // Tüm 'progress' elemanlarını seç
+      const skills = Array.from(column.querySelectorAll(".progress"));
+
+      // 'aria-valuenow' değerine göre sırala
+      skills.sort((a, b) => {
+        const valueA = parseInt(a.querySelector(".progress-bar").getAttribute("aria-valuenow"));
+        const valueB = parseInt(b.querySelector(".progress-bar").getAttribute("aria-valuenow"));
+        return valueB - valueA;
+      });
+
+      // Sıralanmış elemanları yeniden ekle
+      skills.forEach(skill => column.appendChild(skill));
+    };
+
+    // Sol ve sağ sütunları sırala
+    sortSkills(leftColumn);
+    sortSkills(rightColumn);
+  });
 })();
