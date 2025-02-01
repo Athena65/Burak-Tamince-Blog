@@ -22,7 +22,7 @@ The blog is built using:
 - Responsive layout, ensuring compatibility across devices.
 
 ## **Live Demo**
-The blog is hosted using **GitHub Pages**. You can access it [here](https://Athena65.github.io/btblog).
+The blog is hosted using **GitHub Pages**. You can access it [here](https://buraktamince.net.tr/).
 
 ## **Contact**
 - **LinkedIn**: [linkedin.com/in/buraktamince](https://linkedin.com/in/buraktamince)
