@@ -51,12 +51,29 @@
 body {
   color: var(--default-color);
   background-color: var(--background-color);
-  background-image: url('https://images.pexels.com/photos/3560044/pexels-photo-3560044.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-image: url('../img/mainbg.webp');
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
   font-family: var(--default-font);
   transition: background-color 0.5s ease;
+  position: relative;
+  z-index: 0;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background-image: url('../img/mainbg.webp');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.6);
+  pointer-events: none;
 }
 
 a {
@@ -81,7 +98,31 @@ h6 {
   transition: color 0.3s ease;
 }
 
+body,
+section,
+.section,
+.about .content,
+.skills-content,
+.section-title,
+.section-title h2,
+.section-title p,
+.portfolio .portfolio-item .portfolio-info,
+.footer,
+.footer h3,
+.footer p {
+  color: #fff !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
 
+h1, h2, h3, h4, h5, h6 {
+  color: #fff !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+a, a:visited, a:active {
+  color: #fff !important;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
 
 /*--------------------------------------------------------------
 # Global Header
@@ -399,7 +440,7 @@ h6 {
 section,
 .section {
   color: var(--default-color);
-  background-color: var(--background-color);
+  background-color: rgba(10, 10, 10, 0.85) !important;
   padding: 60px 0;
   overflow: clip;
   background-image: none;
@@ -494,6 +535,7 @@ section,
   transform: scale(1.02);
   transition: transform 10s ease;
   animation: subtle-zoom 20s infinite alternate;
+  filter: brightness(0.3);
 }
 
 @keyframes subtle-zoom {
@@ -507,11 +549,11 @@ section,
 
 .hero:before {
   content: "";
-  background: linear-gradient(135deg, rgba(30, 87, 153, 0.6) 0%, rgba(41, 137, 216, 0.5) 50%, rgba(125, 185, 232, 0.4) 100%);
+  background: rgba(0, 0, 0, 0.7); /* Sade siyah yarı saydam overlay */
   position: absolute;
   inset: 0;
   z-index: 2;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .hero::after {
@@ -527,8 +569,8 @@ section,
 .hero .container {
   position: relative;
   z-index: 3;
-  color: #fff; /* Varsayılan metin rengi */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  text-shadow: 0 4px 16px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .hero h2 {
@@ -536,12 +578,16 @@ section,
   font-size: 64px;
   font-weight: 700;
   animation: fadeInDown 1s ease;
+  color: #fff;
+  text-shadow: 0 6px 24px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .hero p {
   margin: 5px 0 0 0;
   font-size: 26px;
   animation: fadeInUp 1s ease 0.3s both;
+  color: #e0e6ed;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
 }
 
 .hero p span {
@@ -621,10 +667,17 @@ section,
 }
 
 .about .content {
-  background-color: var(--surface-color);
+  background-color: rgba(20, 20, 20, 0.92) !important;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s, transform 0.3s, border 0.3s;
+}
+
+.about .content:hover {
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 8px 0 rgba(5,99,187,0.15);
+  transform: translateY(-6px) scale(1.025);
+  border: 2px solid var(--accent-color);
 }
 
 .about .content ul {
@@ -649,6 +702,16 @@ section,
   line-height: 0;
 }
 
+.about .img-fluid {
+  transition: box-shadow 0.3s, transform 0.3s;
+  border-radius: 12px;
+}
+
+.about .img-fluid:hover {
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 8px 0 rgba(5,99,187,0.15);
+  transform: scale(1.05) rotate(-2deg);
+}
+
 /*--------------------------------------------------------------
 # Skills Section
 --------------------------------------------------------------*/
@@ -657,6 +720,14 @@ section,
   display: block;
   background: none;
   border-radius: 0;
+  transition: box-shadow 0.3s, transform 0.3s, background 0.3s;
+  background: rgba(30,30,30,0.7);
+}
+
+.skills .progress:hover {
+  box-shadow: 0 8px 32px 0 rgba(5,99,187,0.25), 0 1.5px 8px 0 rgba(0,0,0,0.15);
+  transform: translateY(-4px) scale(1.03);
+  background: linear-gradient(90deg, var(--accent-color) 0%, rgba(30,30,30,0.7) 100%);
 }
 
 .skills .progress .skill {
@@ -667,6 +738,7 @@ section,
   display: block;
   font-weight: 600;
   font-family: var(--heading-font);
+  transition: color 0.3s;
 }
 
 .skills .progress .skill .val {
@@ -691,7 +763,7 @@ section,
 }
 
 .skills-content {
-  background-color: var(--surface-color);
+  background-color: rgba(20, 20, 20, 0.92) !important;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -729,6 +801,10 @@ section,
 
 .skills .progress-bar {
   animation: pulse 2s infinite;
+}
+
+.skills .progress:hover .skill {
+  color: var(--accent-color);
 }
 
 /*--------------------------------------------------------------
