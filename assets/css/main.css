@@ -804,7 +804,8 @@ section,
 }
 
 .skills .progress:hover .skill {
-  color: var(--accent-color);
+  color: #fff !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
 }
 
 /*--------------------------------------------------------------
