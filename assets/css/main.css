@@ -149,16 +149,6 @@ a, a:visited, a:active {
   }
 }
 
-@media (min-width: 1200px) and (max-width: 1600px) {
-  .header~main {
-    margin-left: 160px;
-  }
-
-  .header~main .hero {
-    margin-left: -160px;
-    width: 100vw;
-  }
-}
 
 .header.header-show {
   left: 0;
