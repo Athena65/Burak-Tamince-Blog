@@ -140,18 +140,63 @@ a, a:visited, a:active {
   min-width: 200px;
 }
 
-@media (max-width: 1199px) {
+/* Large screens - navigation always visible on left */
+@media (min-width: 1200px) {
+  .header {
+    left: 0;
+  }
+}
+
+/* Medium screens - navigation at top when toggled */
+@media (max-width: 1199px) and (min-width: 969px) {
+  .header {
+    background-color: var(--background-color);
+    border-right: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+    width: 100%;
+    height: auto;
+    left: 0;
+    top: -100%;
+    bottom: auto;
+    padding: 15px 0;
+    overflow-x: auto;
+    min-width: 100%;
+  }
+}
+
+/* Small screens - navigation on left when toggled */
+@media (max-width: 968px) {
   .header {
     background-color: var(--background-color);
     border-right: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
     width: 300px;
     left: -100%;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 
-
 .header.header-show {
   left: 0;
+}
+
+/* Medium screens - show from top */
+@media (max-width: 1199px) and (min-width: 969px) {
+  .header.header-show {
+    top: 0;
+    left: 0;
+  }
+}
+
+/* Small screens - show from left */
+@media (max-width: 968px) {
+  .header.header-show {
+    left: 0;
+    top: 0;
+  }
 }
 
 .header .header-toggle {
@@ -170,6 +215,12 @@ a, a:visited, a:active {
   right: 15px;
   z-index: 9999;
   transition: background-color 0.3s;
+}
+
+@media (min-width: 1200px) {
+  .header .header-toggle {
+    display: none;
+  }
 }
 
 .header .header-toggle:hover {
@@ -192,6 +243,33 @@ a, a:visited, a:active {
   width: 140px;
 }
 
+/* Medium screens - horizontal menu */
+@media (max-width: 1199px) and (min-width: 969px) {
+  .navmenu ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  .navmenu ul li {
+    margin: 0 5px;
+  }
+}
+
+/* Small screens - vertical menu */
+@media (max-width: 968px) {
+  .navmenu ul {
+    width: 100%;
+    padding: 20px 0;
+    margin: 0;
+  }
+}
+
 .navmenu a,
 .navmenu a:focus {
   color: var(--nav-color);
@@ -209,6 +287,17 @@ a, a:visited, a:active {
   transition: 0.3s;
 }
 
+/* Medium screens - horizontal menu items */
+@media (max-width: 1199px) and (min-width: 969px) {
+  .navmenu a,
+  .navmenu a:focus {
+    margin-bottom: 0;
+    width: auto;
+    min-width: 56px;
+    white-space: nowrap;
+  }
+}
+
 .navmenu a i,
 .navmenu a:focus i {
   font-size: 20px;
@@ -220,7 +309,6 @@ a, a:visited, a:active {
 }
 
 @media (min-width: 992px) {
-
   .navmenu a,
   .navmenu a:focus {
     max-width: 56px;
@@ -249,6 +337,19 @@ a, a:visited, a:active {
 .navmenu a:hover span,
 .navmenu li:hover>a span {
   display: block;
+}
+
+/* Medium screens - always show text */
+@media (max-width: 1199px) and (min-width: 969px) {
+  .navmenu a span,
+  .navmenu a:focus span {
+    display: block;
+  }
+  
+  .navmenu a,
+  .navmenu a:focus {
+    max-width: none;
+  }
 }
 
 /*--------------------------------------------------------------
@@ -717,7 +818,6 @@ section,
 .skills .progress:hover {
   box-shadow: 0 8px 32px 0 rgba(5,99,187,0.25), 0 1.5px 8px 0 rgba(0,0,0,0.15);
   transform: translateY(-4px) scale(1.03);
-  background: linear-gradient(90deg, var(--accent-color) 0%, rgba(30,30,30,0.7) 100%);
 }
 
 .skills .progress .skill {
@@ -816,11 +916,12 @@ section,
   font-family: var(--heading-font);
   margin-bottom: 10px;
   font-size: 18px;
+  color: #0563bb !important;
 }
 
 .videos .card-text {
   font-size: 14px;
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, var(--default-color), transparent 5%);
 }
 
 .videos .ratio {
@@ -981,4 +1082,124 @@ section,
 /* Favicon styling */
 link[rel="icon"] {
   border-radius: 50%;
+}
+
+/*--------------------------------------------------------------
+# Certificates
+--------------------------------------------------------------*/
+.certificates .certificate-item {
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 100%;
+  transition: all 0.3s ease-in-out;
+  background-color: rgba(20, 20, 20, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  position: relative;
+}
+
+.certificates .certificate-item::after {
+  content: "🔗";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(5, 99, 187, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.certificates .certificate-item:hover::after {
+  opacity: 1;
+}
+
+/* For certificates with glightbox instead of URL */
+.certificates .certificate-no-link::after {
+  content: "🔍";
+}
+
+.certificates .certificate-no-link a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.certificates .certificate-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(5, 99, 187, 0.3);
+  border: 1px solid var(--accent-color);
+}
+
+.certificates .certificate-thumbnail {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+  padding: 20px;
+  max-height: 280px;
+  object-fit: contain;
+  background-color: rgba(25, 25, 25, 0.92) !important;
+}
+
+.certificates .certificate-item:hover .certificate-thumbnail {
+  transform: scale(1.05);
+}
+
+.certificates .certificate-info {
+  padding: 20px;
+  text-align: center;
+}
+
+.certificates .certificate-info h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.certificates .certificate-info p {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #eee;
+}
+
+.certificates .certificate-info a {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-color) !important;
+  transition: all 0.3s ease;
+}
+
+.certificates .certificate-info a:hover {
+  color: color-mix(in srgb, var(--accent-color), transparent 20%) !important;
+  text-decoration: underline;
+}
+
+.certificates .view-certificate {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-color) !important;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.certificates .view-certificate i {
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.certificates .row {
+  justify-content: center;
 }
