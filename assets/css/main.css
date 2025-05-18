@@ -1,28 +1,40 @@
 /* Fonts */
 :root {
-  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Raleway",  sans-serif;
-  --nav-font: "Poppins",  sans-serif;
+  --default-font: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --heading-font: "Raleway", sans-serif;
+  --nav-font: "Poppins", sans-serif;
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
-:root { 
-  --background-color: rgba(240, 244, 248, 0.85); /* Background color for the entire website, including individual sections */
-  --default-color: #272829; /* Default color used for the majority of the text content across the entire website */
-  --heading-color: #45505b; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #0563bb; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
-  --surface-color: rgba(255, 255, 255, 0.9); /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
-  --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
+:root {
+  --background-color: rgba(240, 244, 248, 0.85);
+  /* Background color for the entire website, including individual sections */
+  --default-color: #272829;
+  /* Default color used for the majority of the text content across the entire website */
+  --heading-color: #45505b;
+  /* Color for headings, subheadings and title throughout the website */
+  --accent-color: #0563bb;
+  /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+  --surface-color: rgba(255, 255, 255, 0.9);
+  /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
+  --contrast-color: #ffffff;
+  /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
-  --nav-color: #45505b;  /* The default color of the main navmenu links */
-  --nav-hover-color: #0563bb; /* Applied to main navmenu links when they are hovered over or active */
-  --nav-mobile-background-color: rgba(240, 244, 248, 0.95); /* Used as the background color for mobile navigation menu */
-  --nav-dropdown-background-color: rgba(255, 255, 255, 0.95); /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-  --nav-dropdown-color: #212529; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #0563bb; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-color: #45505b;
+  /* The default color of the main navmenu links */
+  --nav-hover-color: #0563bb;
+  /* Applied to main navmenu links when they are hovered over or active */
+  --nav-mobile-background-color: rgba(240, 244, 248, 0.95);
+  /* Used as the background color for mobile navigation menu */
+  --nav-dropdown-background-color: rgba(255, 255, 255, 0.95);
+  /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
+  --nav-dropdown-color: #212529;
+  /* Used for navigation links of the dropdown items in the navigation menu. */
+  --nav-dropdown-hover-color: #0563bb;
+  /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
@@ -111,17 +123,24 @@ section,
 .footer h3,
 .footer p {
   color: #fff !important;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #fff !important;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
-a, a:visited, a:active {
+a,
+a:visited,
+a:active {
   color: #fff !important;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 /*--------------------------------------------------------------
@@ -255,7 +274,7 @@ a, a:visited, a:active {
     justify-content: center;
     padding: 10px;
   }
-  
+
   .navmenu ul li {
     margin: 0 5px;
   }
@@ -289,6 +308,7 @@ a, a:visited, a:active {
 
 /* Medium screens - horizontal menu items */
 @media (max-width: 1199px) and (min-width: 969px) {
+
   .navmenu a,
   .navmenu a:focus {
     margin-bottom: 0;
@@ -309,6 +329,7 @@ a, a:visited, a:active {
 }
 
 @media (min-width: 992px) {
+
   .navmenu a,
   .navmenu a:focus {
     max-width: 56px;
@@ -341,11 +362,12 @@ a, a:visited, a:active {
 
 /* Medium screens - always show text */
 @media (max-width: 1199px) and (min-width: 969px) {
+
   .navmenu a span,
   .navmenu a:focus span {
     display: block;
   }
-  
+
   .navmenu a,
   .navmenu a:focus {
     max-width: none;
@@ -612,7 +634,8 @@ section,
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* Taşma problemlerini engeller */
+  overflow: hidden;
+  /* Taşma problemlerini engeller */
 }
 
 .hero img {
@@ -633,6 +656,7 @@ section,
   0% {
     transform: scale(1.02);
   }
+
   100% {
     transform: scale(1.08);
   }
@@ -640,7 +664,8 @@ section,
 
 .hero:before {
   content: "";
-  background: rgba(0, 0, 0, 0.7); /* Sade siyah yarı saydam overlay */
+  background: rgba(0, 0, 0, 0.7);
+  /* Sade siyah yarı saydam overlay */
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -661,7 +686,7 @@ section,
   position: relative;
   z-index: 3;
   color: #fff;
-  text-shadow: 0 4px 16px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.5);
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .hero h2 {
@@ -670,7 +695,7 @@ section,
   font-weight: 700;
   animation: fadeInDown 1s ease;
   color: #fff;
-  text-shadow: 0 6px 24px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .hero p {
@@ -678,7 +703,7 @@ section,
   font-size: 26px;
   animation: fadeInUp 1s ease 0.3s both;
   color: #e0e6ed;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .hero p span {
@@ -695,7 +720,8 @@ section,
 .hero .social-links a {
   font-size: 20px;
   display: inline-block;
-  color: rgba(255, 255, 255, 0.8); /* Daha belirgin beyaz renk */
+  color: rgba(255, 255, 255, 0.8);
+  /* Daha belirgin beyaz renk */
   line-height: 1;
   margin-right: 20px;
   transition: all 0.3s ease;
@@ -712,6 +738,7 @@ section,
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -723,6 +750,7 @@ section,
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -733,6 +761,7 @@ section,
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -746,6 +775,52 @@ section,
   .hero p {
     font-size: 20px;
   }
+}
+
+.hero strong {
+  color: var(--accent-color);
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  padding: 0 2px;
+}
+
+.hero strong::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: right;
+}
+
+.hero:hover strong::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.hero i {
+  color: var(--accent-color);
+  font-style: italic;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  padding: 0 2px;
+}
+
+.hero i::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent-color);
+  opacity: 0.5;
 }
 
 /*--------------------------------------------------------------
@@ -766,9 +841,55 @@ section,
 }
 
 .about .content:hover {
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 8px 0 rgba(5,99,187,0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 1.5px 8px 0 rgba(5, 99, 187, 0.15);
   transform: translateY(-6px) scale(1.025);
   border: 2px solid var(--accent-color);
+}
+
+.about .content strong {
+  color: var(--accent-color);
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  padding: 0 2px;
+}
+
+.about .content strong::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: right;
+}
+
+.about .content:hover strong::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.about .content i {
+  color: var(--accent-color);
+  font-style: italic;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  padding: 0 2px;
+}
+
+.about .content i::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent-color);
+  opacity: 0.5;
 }
 
 .about .content ul {
@@ -799,7 +920,7 @@ section,
 }
 
 .about .img-fluid:hover {
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 8px 0 rgba(5,99,187,0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 1.5px 8px 0 rgba(5, 99, 187, 0.15);
   transform: scale(1.05) rotate(-2deg);
 }
 
@@ -812,11 +933,11 @@ section,
   background: none;
   border-radius: 0;
   transition: box-shadow 0.3s, transform 0.3s, background 0.3s;
-  background: rgba(30,30,30,0.7);
+  background: rgba(30, 30, 30, 0.7);
 }
 
 .skills .progress:hover {
-  box-shadow: 0 8px 32px 0 rgba(5,99,187,0.25), 0 1.5px 8px 0 rgba(0,0,0,0.15);
+  box-shadow: 0 8px 32px 0 rgba(5, 99, 187, 0.25), 0 1.5px 8px 0 rgba(0, 0, 0, 0.15);
   transform: translateY(-4px) scale(1.03);
 }
 
@@ -881,9 +1002,11 @@ section,
   0% {
     box-shadow: 0 0 0 0 rgba(5, 99, 187, 0.4);
   }
+
   70% {
     box-shadow: 0 0 0 5px rgba(5, 99, 187, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(5, 99, 187, 0);
   }
@@ -895,7 +1018,7 @@ section,
 
 .skills .progress:hover .skill {
   color: #fff !important;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 /*--------------------------------------------------------------
@@ -938,11 +1061,13 @@ section,
 /* PDF Embed Container */
 .embed-container {
   position: relative;
-  padding-bottom: 56.25%; /* Aspect ratio: 16:9 */
+  padding-bottom: 56.25%;
+  /* Aspect ratio: 16:9 */
   height: 0;
   overflow: hidden;
   max-width: 100%;
-  margin: 30px auto; /* Ortalamak için */
+  margin: 30px auto;
+  /* Ortalamak için */
 }
 
 .embed-container iframe {
@@ -957,13 +1082,15 @@ section,
 /* Mobile-Friendly Design */
 @media (max-width: 768px) {
   .embed-container {
-    padding-bottom: 75%; /* Aspect ratio: 4:3 for smaller screens */
+    padding-bottom: 75%;
+    /* Aspect ratio: 4:3 for smaller screens */
   }
 }
 
 @media (max-width: 576px) {
   .embed-container {
-    padding-bottom: 100%; /* Aspect ratio: 1:1 for very small screens */
+    padding-bottom: 100%;
+    /* Aspect ratio: 1:1 for very small screens */
   }
 }
 
@@ -1164,7 +1291,7 @@ link[rel="icon"] {
   font-weight: 600;
   margin-bottom: 10px;
   color: #fff;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .certificates .certificate-info p {
@@ -1202,4 +1329,69 @@ link[rel="icon"] {
 
 .certificates .row {
   justify-content: center;
+}
+
+/*--------------------------------------------------------------
+# Email Link Hover Effect
+--------------------------------------------------------------*/
+.email-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.email-link:hover {
+  color: var(--accent-color) !important;
+}
+
+.email-link:hover::after {
+  content: "Click to send an email";
+  position: absolute;
+  left: 0;
+  bottom: -25px;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+  z-index: 10;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about p strong {
+  color: var(--accent-color);
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  padding: 0 2px;
+}
+
+.about p strong::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: right;
+}
+
+.about p:hover strong::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }

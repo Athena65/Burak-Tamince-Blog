@@ -1,4 +1,4 @@
-(function() {
+(function () {
   "use strict";
 
   /**
@@ -29,7 +29,7 @@
    * Toggle mobile nav dropdowns
    */
   document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
-    navmenu.addEventListener('click', function(e) {
+    navmenu.addEventListener('click', function (e) {
       e.preventDefault();
       this.parentNode.classList.toggle('active');
       this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
@@ -110,7 +110,7 @@
     new Waypoint({
       element: item,
       offset: '80%',
-      handler: function(direction) {
+      handler: function (direction) {
         let progress = item.querySelectorAll('.progress .progress-bar');
         progress.forEach(el => {
           el.style.width = el.getAttribute('aria-valuenow') + '%';
@@ -129,13 +129,13 @@
   /**
    * Init isotope layout and filters
    */
-  document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
+  document.querySelectorAll('.isotope-layout').forEach(function (isotopeItem) {
     let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
     let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
     let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
 
     let initIsotope;
-    imagesLoaded(isotopeItem.querySelector('.isotope-container'), function() {
+    imagesLoaded(isotopeItem.querySelector('.isotope-container'), function () {
       initIsotope = new Isotope(isotopeItem.querySelector('.isotope-container'), {
         itemSelector: '.isotope-item',
         layoutMode: layout,
@@ -144,8 +144,8 @@
       });
     });
 
-    isotopeItem.querySelectorAll('.isotope-filters li').forEach(function(filters) {
-      filters.addEventListener('click', function() {
+    isotopeItem.querySelectorAll('.isotope-filters li').forEach(function (filters) {
+      filters.addEventListener('click', function () {
         isotopeItem.querySelector('.isotope-filters .filter-active').classList.remove('filter-active');
         this.classList.add('filter-active');
         initIsotope.arrange({
@@ -163,7 +163,7 @@
    * Init swiper sliders
    */
   function initSwiper() {
-    document.querySelectorAll(".init-swiper").forEach(function(swiperElement) {
+    document.querySelectorAll(".init-swiper").forEach(function (swiperElement) {
       let config = JSON.parse(
         swiperElement.querySelector(".swiper-config").innerHTML.trim()
       );
@@ -181,7 +181,7 @@
   /**
    * Correct scrolling position upon page load for URLs containing hash links.
    */
-  window.addEventListener('load', function(e) {
+  window.addEventListener('load', function (e) {
     if (window.location.hash) {
       if (document.querySelector(window.location.hash)) {
         setTimeout(() => {
@@ -220,27 +220,66 @@
 
   /* age calculator */
   document.addEventListener('DOMContentLoaded', function () {
-    const birthDate = new Date(2002, 6, 10); // 10 Temmuz 2002 (Ay 0 tabanlıdır, 6 = Temmuz)
-    const today = new Date(); // Bugünün tarihi
-  
-    let ageYears = today.getFullYear() - birthDate.getFullYear();
-    let ageMonths = today.getMonth() - birthDate.getMonth();
-    let ageDays = today.getDate() - birthDate.getDate();
-  
-    // Eğer doğum günü bu yıl henüz kutlanmadıysa yılı bir azalt
-    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-      ageYears--;
+    // Calculate work experience starting from 2 years as of now
+    const experienceStartDate = new Date();
+    experienceStartDate.setFullYear(experienceStartDate.getFullYear() - 2); // Start from 2 years ago
+
+    function updateExperience() {
+      const today = new Date(); // Current date
+
+      let years = today.getFullYear() - experienceStartDate.getFullYear();
+      let months = today.getMonth() - experienceStartDate.getMonth();
+
+      // Adjust years and months if needed
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      // Format the experience string
+      let experienceText = years + " year" + (years !== 1 ? "s" : "");
+      if (months > 0) {
+        experienceText += " " + months + " month" + (months !== 1 ? "s" : "");
+      }
+
+      // Update the experience span
+      document.getElementById('experience').textContent = experienceText;
     }
-  
-    // Yaşı span'a yazdır
-    document.getElementById('age').textContent = ageYears;
+
+    // Initial update
+    updateExperience();
+
+    // Update experience every month
+    setInterval(updateExperience, 1000 * 60 * 60 * 24 * 30); // Approximately every month
+
+    // Calculate age
+    function calculateAge() {
+      const birthDate = new Date(2002, 5, 17); // July 17, 2002 (months are 0-based, so 5 = June)
+      const today = new Date();
+
+      let age = today.getFullYear() - birthDate.getFullYear();
+
+      // Adjust age if birthday hasn't occurred yet this year
+      if (today.getMonth() < birthDate.getMonth() ||
+        (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      document.getElementById('age').textContent = age;
+    }
+
+    // Calculate age initially
+    calculateAge();
+
+    // Update age once a day
+    setInterval(calculateAge, 1000 * 60 * 60 * 24);
   });
-  
+
   /* dynamic website */
   document.addEventListener('DOMContentLoaded', function () {
     // Mevcut sitenin URL'sini alın
     const currentURL = window.location.hostname;
-  
+
     // URL'yi ilgili span'a yazdırın
     document.getElementById('website').textContent = currentURL;
   });
