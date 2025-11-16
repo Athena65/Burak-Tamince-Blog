@@ -220,9 +220,9 @@
 
   /* age calculator */
   document.addEventListener('DOMContentLoaded', function () {
-    // Calculate work experience starting from 2 years as of now
+    // Calculate work experience starting from 3 years as of now
     const experienceStartDate = new Date();
-    experienceStartDate.setFullYear(experienceStartDate.getFullYear() - 2); // Start from 2 years ago
+    experienceStartDate.setFullYear(experienceStartDate.getFullYear() - 3); // Start from 3 years ago
 
     function updateExperience() {
       const today = new Date(); // Current date
@@ -237,7 +237,7 @@
       }
 
       // Format the experience string
-      let experienceText = years + " year" + (years !== 1 ? "s" : "");
+      let experienceText = "+" + years + " year" + (years !== 1 ? "s" : "");
       if (months > 0) {
         experienceText += " " + months + " month" + (months !== 1 ? "s" : "");
       }
