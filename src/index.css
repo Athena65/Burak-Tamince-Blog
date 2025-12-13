@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --surface-color: rgba(255, 255, 255, 0.9);
+  --contrast-color: #ffffff;
+}
+
+body,
+body::before {
+  background: transparent;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body {
+  color: #fff;
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  position: relative;
+  z-index: 0;
+}
+
+/* Scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Text shadows for readability */
+h1, h2, h3, h4, h5, h6 {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Typed cursor */
+.typed-cursor {
+  opacity: 1;
+  animation: typedjsBlink 0.7s infinite;
+}
+
+.typed-cursor.typed-cursor--blink {
+  animation: typedjsBlink 0.7s infinite;
+}
+
+@keyframes typedjsBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Hero animations */
+@keyframes subtle-zoom {
+  0% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+/* Section spacing */
+.section {
+  margin: 10px 0;
+}
+
+/* Main content - header is inside */
+.main {
+  margin-left: 0;
+  padding-left: 0;
+  width: 100%;
+  position: relative;
+}
+
+@media (min-width: 1200px) {
+  .main {
+    padding-left: 200px;
+  }
+}
+
+/* All sections - full width with padding for header, above hero image */
+.section {
+  width: 100%;
+  margin-left: 0;
+  padding-left: 0;
+  position: relative;
+  z-index: 4;
+}
+
+@media (min-width: 1200px) {
+  .section {
+    padding-left: 0;
+  }
+}
+
+/* Hero section specific - overlay only in hero */
+#hero {
+  z-index: 2;
+}
+
+#hero .hero-overlay {
+  z-index: 2;
+  position: relative;
+}
+
+#hero .container {
+  z-index: 3;
+  position: relative;
+}
+
+/* Hero background and overlay - full width within hero section */
+.hero-bg {
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.hero-overlay {
+  left: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+/* Hero section - full width, extends behind header */
+#hero {
+  width: 100%;
+  margin-left: 0;
+  padding-left: 0;
+  position: relative;
+  left: 0;
+}
+
+@media (min-width: 1200px) {
+  #hero {
+    padding-left: 200px;
+  }
+}
+
+/* Navigation link label visibility - only show on hover, never for active */
+.nav-link .nav-label {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, max-width 0.3s ease, padding 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Active link - NO label, only icon */
+.nav-link.bg-accent .nav-label {
+  opacity: 0 !important;
+  max-width: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Show label ONLY on hover */
+.nav-link:hover .nav-label {
+  opacity: 1;
+  max-width: 200px;
+  padding-left: 6px;
+}
+
+/* Header - completely transparent, hero image shows through */
+#header {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+#header nav,
+#header nav ul,
+#header nav ul li {
+  background: transparent !important;
+}
+
+/* Nav links - completely transparent except active */
+#header .nav-link {
+  background: transparent !important;
+}
+
+#header .nav-link:hover:not(.bg-accent) {
+  background: transparent !important;
+}
+
+#header .nav-link.bg-accent {
+  background: #0563bb !important;
+}
+
+/* Header responsive */
+@media (max-width: 1199px) {
+  /* Mobile menu - keep transparent but add slight backdrop for readability */
+  #header {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(5px);
+  }
+  
+  /* Mobile nav links - show full width on hover */
+  #header .nav-link {
+    transition: width 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  #header .nav-link:hover {
+    width: 100% !important;
+  }
+}
+
+/* Portfolio hover effect */
+.portfolio-item {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero h2 {
+    font-size: 32px;
+  }
+  
+  .hero p {
+    font-size: 20px;
+  }
+  
+  .embed-container {
+    padding-bottom: 75%;
+  }
+}
+
+@media (max-width: 576px) {
+  .embed-container {
+    padding-bottom: 100%;
+  }
+}
+
