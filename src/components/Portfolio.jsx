@@ -63,7 +63,7 @@ const PortfolioCard = ({ item, onToggle }) => {
           </p>
 
           {/* Features List (Collapsible) */}
-          <div className="mb-6 min-h-[40px]">
+          <div className="min-h-[40px]">
             <button
               onClick={handleToggle}
               className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-accent transition-all hover:text-white"

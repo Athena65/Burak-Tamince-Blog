@@ -57,78 +57,66 @@ const About = () => {
   }, [])
 
   return (
-    <section id="about" className="about section relative overflow-hidden rounded-lg border border-white/5 bg-black/85 py-16 shadow-[0_8px_32px_rgba(0,0,0,0.1)] backdrop-blur-[5px]">
-      <div className="container">
-        <div className="section-title mb-8" data-aos="fade-up">
-          <h2 className="relative mb-5 pb-5 text-3xl font-bold text-white">
-            About
-            <span className="absolute bottom-0 left-0 h-[3px] w-[60px] bg-accent"></span>
+    <section id="about" className="about section relative overflow-hidden rounded-xl border border-white/10 bg-black/50 py-24 shadow-2xl backdrop-blur-md">
+      {/* Background Glows */}
+      <div className="absolute -left-24 top-0 h-96 w-96 rounded-full bg-accent/10 blur-[120px]"></div>
+      <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-blue-500/5 blur-[120px]"></div>
+
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="section-title mb-16 text-center" data-aos="fade-up">
+          <h2 className="relative mb-6 inline-block pb-4 text-4xl font-extrabold tracking-tight text-white uppercase text-center">
+            About Me
+            <span className="absolute bottom-0 left-1/2 h-[4px] w-[80px] -translate-x-1/2 rounded-full bg-gradient-to-r from-accent to-blue-500"></span>
           </h2>
-          <p className="m-0 text-white">
-            I am an <i className="text-accent">innovative</i> and <i className="text-accent">passionate learner</i> with extensive experience in technology and software development. Throughout my career, I have specialized in <strong className="text-accent">web</strong> and <strong className="text-accent">mobile application development</strong>, <i className="text-accent">project management</i>, and <i className="text-accent">software architecture</i>. I am a <strong className="text-accent">determined</strong> and <strong className="text-accent">hardworking</strong> individual who, alongside my <i className="text-accent">academic success</i>, have gained <strong className="text-accent">real-world experience</strong> through <i className="text-accent">internships</i> and continuously strive for <i className="text-accent">self-improvement</i>. I graduated from Istanbul Gedik University Computer Engineering Department with a <strong className="text-accent">GPA of 3.88</strong>, demonstrating my <strong className="text-accent">exceptional academic performance</strong> and <i className="text-accent">dedication</i> to my field. I achieved the distinction of being the <strong className="text-accent">top student</strong> in my faculty and department, and ranked <strong className="text-accent">3rd in the entire university</strong>, showcasing my outstanding commitment to excellence. In addition to my studies, I am currently completing an <strong className="text-accent">internship</strong>, where I am gaining <i className="text-accent">hands-on experience</i> in software development, <strong className="text-accent">problem-solving</strong>, and <i className="text-accent">collaborative teamwork</i>, further enhancing my technical skills and professional growth.
+          <p className="mx-auto max-w-4xl text-lg text-white/80 leading-relaxed italic">
+            "An <span className="text-accent font-semibold">innovative</span> and <span className="text-accent font-semibold">passionate learner</span> with a deep focus on building scalable solutions and mastering modern software architectures."
           </p>
         </div>
-        <div className="row flex flex-wrap lg:flex-nowrap items-start gap-6" data-aos="fade-up" data-aos-delay="100">
-          <div className="col-lg-4 w-full lg:w-auto flex-shrink-0">
-            <img
-              src="/assets/img/profile-img.jpg"
-              className="img-fluid h-auto max-w-[280px] w-full rounded-xl border border-white/10 shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03] hover:border-white/20 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
-              alt="Burak Tamince"
-            />
+
+        <div className="flex flex-wrap lg:flex-nowrap items-center gap-12" data-aos="fade-up" data-aos-delay="100">
+          <div className="w-full lg:w-1/3 flex justify-center">
+            <div className="relative group">
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-accent to-blue-600 opacity-25 blur transition duration-1000 group-hover:opacity-50 group-hover:duration-200"></div>
+              <img
+                src="/assets/img/profile-img.jpg"
+                className="relative h-auto max-w-[320px] w-full rounded-2xl border border-white/20 shadow-2xl transition-all duration-500 group-hover:scale-[1.02]"
+                alt="Burak Tamince"
+              />
+            </div>
           </div>
-          <div className="col-lg-8 w-full lg:flex-1">
-            <div className="content">
-              <h2 className="mb-3 text-2xl font-bold text-white">Computer Engineer & Full-Stack Developer</h2>
-              <p className="mb-6 italic text-white">
-                I adopt a user-focused, efficiency-driven, and collaborative approach to software projects. My ability to work in teams and my leadership skills have been instrumental in successfully delivering projects.
+
+          <div className="w-full lg:w-2/3">
+            <div className="space-y-6">
+              <h3 className="text-3xl font-bold text-white tracking-tight">
+                Computer Engineer & <span className="text-accent">Full-Stack Developer</span>
+              </h3>
+              <p className="text-white/70 text-lg leading-relaxed">
+                I graduated from Istanbul Gedik University as the <span className="text-white font-bold">top student</span> of my faculty with an exceptional <span className="text-white font-bold">GPA of 3.88</span>. My approach is user-centric, efficiency-driven, and highly collaborative. I specialize in turning complex problems into elegant, maintainable code.
               </p>
-              <div className="row flex flex-wrap gap-8">
-                <div className="col-lg-6 w-full lg:w-auto">
-                  <ul className="m-0 list-none p-0">
-                    <li className="mb-4">
-                      <i className="bi bi-chevron-right mr-2 text-accent"></i>
-                      <strong className="mr-2 text-white">Work Experience:</strong>
-                      <span className="text-white" id="experience">{experience}</span>
-                    </li>
-                    <li className="mb-4">
-                      <i className="bi bi-chevron-right mr-2 text-accent"></i>
-                      <strong className="mr-2 text-white">Website:</strong>
-                      <span className="text-white" id="website">{website}</span>
-                    </li>
-                    <li className="mb-4">
-                      <i className="bi bi-chevron-right mr-2 text-accent"></i>
-                      <strong className="mr-2 text-white">City:</strong>
-                      <span className="text-white">Istanbul, Türkiye</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="col-lg-6 w-full lg:w-auto">
-                  <ul className="m-0 list-none p-0">
-                    <li className="mb-4">
-                      <i className="bi bi-chevron-right mr-2 text-accent"></i>
-                      <strong className="mr-2 text-white">Age:</strong>
-                      <span className="text-white" id="age">{age}</span>
-                    </li>
-                    <li className="mb-4">
-                      <i className="bi bi-chevron-right mr-2 text-accent"></i>
-                      <strong className="mr-2 text-white">Degree:</strong>
-                      <span className="text-white">Bachelor's Degree</span>
-                    </li>
-                    <li className="mb-4">
-                      <i className="bi bi-chevron-right mr-2 text-accent"></i>
-                      <strong className="mr-2 text-white">Email:</strong>
-                      <span className="text-white">
-                        <a
-                          href="mailto:btamince@gmail.com"
-                          className="email-link text-accent transition-colors duration-300 hover:text-white"
-                          title="Click to send an email"
-                        >
-                          btamince@gmail.com
-                        </a>
-                      </span>
-                    </li>
-                  </ul>
-                </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 pt-4">
+                {[
+                  { label: 'Experience', value: experience, icon: 'bi-briefcase' },
+                  { label: 'Degree', value: "Bachelor's Degree", icon: 'bi-mortarboard' },
+                  { label: 'City', value: 'Istanbul, Türkiye', icon: 'bi-geo-alt' },
+                  { label: 'Age', value: age, icon: 'bi-calendar-event' },
+                  { label: 'Website', value: website, icon: 'bi-globe' },
+                  { label: 'Email', value: 'btamince@gmail.com', icon: 'bi-envelope', isEmail: true },
+                ].map((info, i) => (
+                  <div key={i} className="flex items-center gap-4 group/item">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 border border-white/10 group-hover/item:border-accent group-hover/item:bg-accent/10 transition-colors">
+                      <i className={`bi ${info.icon} text-accent`}></i>
+                    </div>
+                    <div>
+                      <span className="block text-[11px] font-bold uppercase tracking-widest text-white/40">{info.label}</span>
+                      {info.isEmail ? (
+                        <a href={`mailto:${info.value}`} className="text-white hover:text-accent transition-colors font-medium">{info.value}</a>
+                      ) : (
+                        <span className="text-white font-medium">{info.value}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

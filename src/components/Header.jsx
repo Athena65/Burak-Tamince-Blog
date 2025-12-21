@@ -16,9 +16,7 @@ const Header = () => {
     { id: 'videos', icon: 'bi-youtube', label: 'Videos' },
   ]
 
-  const handleNavClick = (e, itemId) => {
-    e.preventDefault()
-    smoothScrollTo(`#${itemId}`)
+  const handleNavClick = () => {
     setIsMenuOpen(false)
   }
 
@@ -34,25 +32,42 @@ const Header = () => {
       ></i>
       <header
         id="header"
-        className={`fixed left-0 top-0 z-[10] flex h-screen min-w-[200px] flex-col justify-center overflow-y-auto bg-transparent px-4 transition-all duration-300 ${
-          isMenuOpen ? 'left-0' : '-left-full'
-        } xl:left-0`}
+        className={`fixed z-[9990] transition-all duration-300 ease-in-out
+          /* Mobile: Top Bar Overlay */
+          left-0 top-0 w-full overflow-hidden
+          ${isMenuOpen ? 'h-auto py-6 bg-black/95 backdrop-blur-xl border-b border-white/10 opacity-100 visible' : 'h-0 opacity-0 invisible xl:h-screen xl:opacity-100 xl:visible'}
+          
+          /* Desktop: Sidebar Reset */
+          xl:left-0 xl:top-0 xl:w-auto xl:bg-transparent xl:border-none xl:py-0 xl:flex xl:flex-col xl:justify-center xl:px-4 xl:backdrop-blur-none xl:overflow-visible
+        `}
       >
-        <nav id="navmenu" className="navmenu z-[10] p-0">
-          <ul className="m-0 w-[140px] list-none p-0 pb-5 xl:w-[140px]">
+        <nav id="navmenu" className="navmenu w-full xl:w-[140px]">
+          <ul className={`m-0 p-0 flex items-center justify-center gap-6 flex-wrap xl:block xl:gap-0`}>
             {navItems.map((item) => (
-              <li key={item.id} className="mb-2">
+              <li key={item.id} className="xl:mb-2 xl:w-full">
                 <a
                   href={`#${item.id}`}
                   onClick={(e) => handleNavClick(e, item.id)}
-                  className={`nav-link group flex h-14 items-center overflow-hidden rounded-full px-[18px] py-2.5 text-[15px] text-white transition-all duration-300 hover:translate-y-[-2px] ${
-                    activeSection === item.id
-                      ? 'w-14 bg-accent text-white shadow-[0_4px_12px_rgba(5,99,187,0.3)]'
-                      : 'w-14'
-                  } hover:w-full`}
+                  className={`group flex items-center overflow-hidden rounded-full font-medium text-white transition-all duration-300
+                    
+                    /* Mobile Item Styles */
+                    justify-center items-center p-2 text-xl hover:text-accent
+                    
+                    /* Desktop Pill Styles */
+                    xl:h-14 xl:px-[18px] xl:py-2.5 xl:text-[15px] xl:justify-start
+                    ${activeSection === item.id
+                      ? 'text-accent xl:text-white xl:w-14 xl:bg-accent xl:shadow-[0_4px_12px_rgba(5,99,187,0.3)]'
+                      : 'xl:w-14'
+                    }
+                    xl:hover:w-full xl:hover:bg-accent
+                  `}
                 >
-                  <i className={`${item.icon} navicon text-xl flex-shrink-0`}></i>
-                  <span className="nav-label px-1 pl-1.5 whitespace-nowrap">{item.label}</span>
+                  <i className={`${item.icon} text-2xl xl:text-xl xl:mr-3 xl:text-center xl:w-6`}></i>
+
+                  {/* Label: Hidden on mobile (icon only), hidden on desktop default (w-0 or hidden), shown on desktop hover */}
+                  <span className="hidden xl:hidden xl:group-hover:inline-block xl:pl-0 whitespace-nowrap opacity-0 xl:group-hover:opacity-100 transition-opacity duration-300 delay-75">
+                    {item.label}
+                  </span>
                 </a>
               </li>
             ))}

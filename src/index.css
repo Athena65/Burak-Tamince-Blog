@@ -36,7 +36,12 @@ html {
 }
 
 /* Text shadows for readability */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
@@ -61,6 +66,7 @@ h1, h2, h3, h4, h5, h6 {
   0% {
     transform: scale(1.02);
   }
+
   100% {
     transform: scale(1.08);
   }
@@ -81,8 +87,6 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Header - fixed positioned, always visible on scroll */
 #header {
-  position: fixed !important;
-  left: 0;
   top: 0;
   z-index: 10 !important;
 }
@@ -109,16 +113,11 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (min-width: 1200px) {
   .container {
-    padding-left: 200px !important;
-    max-width: calc(100% - 200px);
+    padding-left: 120px !important;
+    max-width: calc(100% - 100px);
   }
-  
-  /* Hero section container - no padding, content over navbar */
-  #hero .container {
-    padding-left: 0 !important;
-    max-width: 100%;
-  }
-  
+
+
   /* Footer container - centered, no left padding */
   #footer .container {
     padding-left: 0 !important;
@@ -233,16 +232,17 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Header responsive */
 @media (max-width: 1199px) {
+
   /* Mobile menu - keep transparent but add slight backdrop for readability */
   #header {
     backdrop-filter: blur(5px);
   }
-  
+
   /* Mobile nav links - show full width on hover */
   #header .nav-link {
     transition: width 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
   }
-  
+
   #header .nav-link:hover {
     width: 100% !important;
   }
@@ -259,11 +259,11 @@ h1, h2, h3, h4, h5, h6 {
   .hero h2 {
     font-size: 32px;
   }
-  
+
   .hero p {
     font-size: 20px;
   }
-  
+
   .embed-container {
     padding-bottom: 75%;
   }
@@ -286,4 +286,3 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 1rem;
   padding-right: 1rem;
 }
-

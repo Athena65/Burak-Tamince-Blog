@@ -81,16 +81,16 @@ const Skills = () => {
 
   const SkillItem = ({ skill }) => (
     <div
-      className="progress-item mb-4 rounded-lg border border-white/10 bg-black/92 p-4 shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 hover:border-white/20 hover:bg-black/95 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+      className="progress-item mb-2 group"
       data-value={skill.value}
     >
-      <div className="skill mb-1.5 flex items-center justify-between text-sm font-semibold text-white">
-        <span>{skill.name}</span>
-        <span className="val font-bold text-white">{skill.value}%</span>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-bold text-white/90 group-hover:text-accent transition-colors">{skill.name}</span>
+        <span className="text-xs font-bold text-accent bg-accent/10 px-2 py-0.5 rounded-full">{skill.value}%</span>
       </div>
-      <div className="progress h-2 overflow-hidden rounded bg-[rgba(40,40,40,0.8)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
         <div
-          className="progress-bar h-full rounded bg-accent transition-all duration-1000 ease-in-out"
+          className="progress-bar h-full rounded-full bg-gradient-to-r from-accent to-blue-400 shadow-[0_0_10px_rgba(5,99,187,0.5)] transition-all duration-1000 ease-out"
           role="progressbar"
           aria-valuenow={skill.value}
           aria-valuemin="0"
@@ -103,28 +103,34 @@ const Skills = () => {
   )
 
   return (
-    <section id="skills" className="skills section relative overflow-hidden rounded-lg border border-white/5 bg-black/85 py-16 shadow-[0_8px_32px_rgba(0,0,0,0.1)] backdrop-blur-[5px]">
-      <div className="container">
+    <section id="skills" className="skills section relative overflow-hidden rounded-xl border border-white/10 bg-black/50 py-24 shadow-2xl backdrop-blur-md">
+      {/* Background Glows */}
+      <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-accent/10 blur-[120px]"></div>
+      <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-blue-500/5 blur-[120px]"></div>
+
+      <div className="container relative z-10 mx-auto px-4">
         <div className="section-title mb-16 text-center" data-aos="fade-up">
-          <h2 className="relative mb-5 pb-5 text-3xl font-bold text-white">
-            Skills
-            <span className="absolute bottom-0 left-1/2 h-[3px] w-[60px] -translate-x-1/2 bg-accent"></span>
+          <h2 className="relative mb-6 inline-block pb-4 text-4xl font-extrabold tracking-tight text-white uppercase">
+            Technical Skills
+            <span className="absolute bottom-0 left-1/2 h-[4px] w-[80px] -translate-x-1/2 rounded-full bg-gradient-to-r from-accent to-blue-500"></span>
           </h2>
-          <p className="m-0 text-white">
-            My expertise in software development includes the following skills and technical proficiencies
+          <p className="mx-auto max-w-3xl text-lg text-white/70 leading-relaxed">
+            A comprehensive overview of my technical expertise and proficiency in various tools,
+            languages, and frameworks developed through years of dedicated practice.
           </p>
         </div>
-        <div className="row flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="100">
+
+        <div className="row" data-aos="fade-up" data-aos-delay="100">
           <div
             ref={skillsContainerRef}
-            className="skills-content skills-animation flex w-full flex-wrap gap-4"
+            className="flex flex-wrap -mx-4"
           >
-            <div className="left-skills w-full lg:w-[calc(50%-0.5rem)]">
+            <div className="left-skills w-full lg:w-1/2 px-4 space-y-2">
               {leftSkills.map((skill) => (
                 <SkillItem key={skill.name} skill={skill} />
               ))}
             </div>
-            <div className="right-skills w-full lg:w-[calc(50%-0.5rem)]">
+            <div className="right-skills w-full lg:w-1/2 px-4 space-y-2">
               {rightSkills.map((skill) => (
                 <SkillItem key={skill.name} skill={skill} />
               ))}
