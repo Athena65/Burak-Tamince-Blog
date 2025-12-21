@@ -34,11 +34,11 @@ const Header = () => {
       ></i>
       <header
         id="header"
-        className={`fixed left-0 top-0 z-[3] flex h-screen min-w-[200px] flex-col justify-center overflow-y-auto bg-transparent px-4 transition-all duration-300 ${
+        className={`fixed left-0 top-0 z-[10] flex h-screen min-w-[200px] flex-col justify-center overflow-y-auto bg-transparent px-4 transition-all duration-300 ${
           isMenuOpen ? 'left-0' : '-left-full'
         } xl:left-0`}
       >
-        <nav id="navmenu" className="z-[3] p-0">
+        <nav id="navmenu" className="navmenu z-[10] p-0">
           <ul className="m-0 w-[140px] list-none p-0 pb-5 xl:w-[140px]">
             {navItems.map((item) => (
               <li key={item.id} className="mb-2">

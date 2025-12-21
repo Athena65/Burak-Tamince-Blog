@@ -42,7 +42,7 @@ const Languages = () => {
   ]
 
   return (
-    <section id="languages" className="languages section relative overflow-hidden rounded-lg border border-white/18 bg-black/85 py-16 shadow-[0_8px_32px_rgba(0,0,0,0.1)] backdrop-blur-[5px]">
+    <section id="languages" className="languages section relative overflow-hidden rounded-lg border border-white/5 bg-black/85 py-16 shadow-[0_8px_32px_rgba(0,0,0,0.1)] backdrop-blur-[5px]">
       <div className="container">
         <div className="section-title mb-16 text-center" data-aos="fade-up">
           <h2 className="relative mb-5 pb-5 text-3xl font-bold text-white">
