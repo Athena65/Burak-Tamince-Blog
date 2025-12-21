@@ -1,28 +1,10 @@
-import { useEffect, useRef } from 'react'
-import GLightbox from 'glightbox'
+import { useState } from 'react'
+import Lightbox from 'yet-another-react-lightbox'
+import 'yet-another-react-lightbox/styles.css'
 
 const Certificates = () => {
-  const lightboxRef = useRef(null)
-
-  useEffect(() => {
-    if (!lightboxRef.current) {
-      lightboxRef.current = GLightbox({
-        selector: '.glightbox',
-        touchNavigation: true,
-        loop: false,
-        autofocusVideo: false,
-        openEffect: 'fade',
-        closeEffect: 'fade',
-      })
-    }
-
-    return () => {
-      if (lightboxRef.current) {
-        lightboxRef.current.destroy()
-        lightboxRef.current = null
-      }
-    }
-  }, [])
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
 
   const certificates = [
     {
@@ -58,31 +40,38 @@ const Certificates = () => {
       title: 'Java Development',
       description: 'Certification in Java Programming',
       image: '/assets/certificates/img/javacert.jpg',
-      gallery: 'certificate-gallery',
       hasLink: false,
     },
     {
       title: 'Microservices Architecture',
       description: 'Certification in Microservices Development',
       image: '/assets/certificates/img/mikroserviscert.jpg',
-      gallery: 'certificate-gallery',
       hasLink: false,
     },
     {
       title: 'UX Design',
       description: 'Certification in User Experience Design',
       image: '/assets/certificates/img/uxcert.jpg',
-      gallery: 'certificate-gallery',
       hasLink: false,
     },
     {
       title: 'University Ranking Achievements',
       description: 'Official document showcasing academic excellence and university ranking',
       image: '/assets/certificates/img/ranks.jpeg',
-      gallery: 'certificate-gallery',
       hasLink: false,
     },
   ]
+
+  const handleImageClick = (index) => {
+    setLightboxIndex(index)
+    setLightboxOpen(true)
+  }
+
+  const lightboxSlides = certificates.map(cert => ({
+    src: cert.image,
+    title: cert.title,
+    description: cert.description || cert.issuer
+  }))
 
   return (
     <section id="certificates" className="certificates section relative overflow-hidden rounded-xl border border-white/10 bg-black/50 py-24 shadow-2xl backdrop-blur-md">
@@ -148,14 +137,13 @@ const Certificates = () => {
                         <i className="bi bi-patch-check"></i>
                       </a>
                     ) : (
-                      <a
-                        href={cert.image}
-                        className="glightbox flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-white/20"
-                        data-gallery={cert.gallery}
+                      <button
+                        onClick={() => handleImageClick(index)}
+                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-white/20"
                       >
                         View Image
                         <i className="bi bi-eye"></i>
-                      </a>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -164,6 +152,17 @@ const Certificates = () => {
           ))}
         </div>
       </div>
+
+      <Lightbox
+        open={lightboxOpen}
+        close={() => setLightboxOpen(false)}
+        index={lightboxIndex}
+        slides={lightboxSlides}
+        styles={{
+          container: { backgroundColor: 'rgba(0, 0, 0, 0.95)' },
+          root: { zIndex: 10003 }
+        }}
+      />
     </section>
   )
 }

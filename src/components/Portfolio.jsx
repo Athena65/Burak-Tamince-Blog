@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import Isotope from 'isotope-layout'
 import imagesLoaded from 'imagesloaded'
-import GLightbox from 'glightbox'
+import Lightbox from 'yet-another-react-lightbox'
+import 'yet-another-react-lightbox/styles.css'
 
-const PortfolioCard = ({ item, onToggle }) => {
+const PortfolioCard = ({ item, index, onToggle, onOpenLightbox }) => {
   const [showFeatures, setShowFeatures] = useState(false)
 
   const handleToggle = () => {
@@ -16,19 +17,6 @@ const PortfolioCard = ({ item, onToggle }) => {
         onToggle()
       }, ms)
     })
-  }
-
-  const handlePreview = (e) => {
-    const btn = e.currentTarget
-    btn.blur() // Fix for aria-hidden accessibility error
-    const lightbox = GLightbox({
-      elements: [{
-        href: item.image,
-        title: item.title,
-        description: item.description || ''
-      }]
-    })
-    lightbox.open()
   }
 
   return (
@@ -87,7 +75,7 @@ const PortfolioCard = ({ item, onToggle }) => {
           {/* Action Buttons */}
           <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
             <button
-              onClick={handlePreview}
+              onClick={() => onOpenLightbox(index)}
               className="flex items-center gap-2 text-sm font-medium text-white/60 transition-colors hover:text-white"
             >
               <i className="bi bi-zoom-in text-lg"></i>
@@ -113,43 +101,14 @@ const Portfolio = () => {
   const isotopeRef = useRef(null)
   const isotopeInstanceRef = useRef(null)
   const [filterKey, setFilterKey] = useState('*')
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
 
   const refreshIsotope = () => {
     if (isotopeInstanceRef.current) {
       isotopeInstanceRef.current.layout()
     }
   }
-
-  useEffect(() => {
-    GLightbox({
-      selector: '.glightbox',
-    })
-  }, [])
-
-  useEffect(() => {
-    if (isotopeRef.current) {
-      imagesLoaded(isotopeRef.current, () => {
-        isotopeInstanceRef.current = new Isotope(isotopeRef.current, {
-          itemSelector: '.isotope-item',
-          layoutMode: 'masonry',
-        })
-      })
-    }
-
-    return () => {
-      if (isotopeInstanceRef.current) {
-        isotopeInstanceRef.current.destroy()
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (isotopeInstanceRef.current) {
-      filterKey === '*'
-        ? isotopeInstanceRef.current.arrange({ filter: `*` })
-        : isotopeInstanceRef.current.arrange({ filter: `.${filterKey}` })
-    }
-  }, [filterKey])
 
   const portfolioItems = [
     {
@@ -218,6 +177,42 @@ const Portfolio = () => {
     },
   ]
 
+  const lightboxSlides = portfolioItems.map(item => ({
+    src: item.image,
+    title: item.title,
+    description: item.description
+  }))
+
+  const handleOpenLightbox = (index) => {
+    setLightboxIndex(index)
+    setLightboxOpen(true)
+  }
+
+  useEffect(() => {
+    if (isotopeRef.current) {
+      imagesLoaded(isotopeRef.current, () => {
+        isotopeInstanceRef.current = new Isotope(isotopeRef.current, {
+          itemSelector: '.isotope-item',
+          layoutMode: 'masonry',
+        })
+      })
+    }
+
+    return () => {
+      if (isotopeInstanceRef.current) {
+        isotopeInstanceRef.current.destroy()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isotopeInstanceRef.current) {
+      filterKey === '*'
+        ? isotopeInstanceRef.current.arrange({ filter: `*` })
+        : isotopeInstanceRef.current.arrange({ filter: `.${filterKey}` })
+    }
+  }, [filterKey])
+
   const categories = [
     { label: 'All', key: '*' },
     { label: 'Web', key: 'web' },
@@ -267,13 +262,23 @@ const Portfolio = () => {
           data-aos-delay="200"
         >
           {portfolioItems.map((item, index) => (
-            <PortfolioCard key={index} item={item} onToggle={refreshIsotope} />
+            <PortfolioCard key={index} item={item} index={index} onToggle={refreshIsotope} onOpenLightbox={handleOpenLightbox} />
           ))}
         </div>
       </div>
+
+      <Lightbox
+        open={lightboxOpen}
+        close={() => setLightboxOpen(false)}
+        index={lightboxIndex}
+        slides={lightboxSlides}
+        styles={{
+          container: { backgroundColor: 'rgba(0, 0, 0, 0.95)' },
+          root: { zIndex: 10003 }
+        }}
+      />
     </section>
   )
 }
 
 export default Portfolio
-

@@ -115,7 +115,7 @@ const Videos = () => {
 
   const filteredVideos = activeCategory === 'All'
     ? videos
-    : videos.filter(v => v.category === activeCategory)
+    : videos.filter(v => v.category.toLowerCase() === activeCategory.toLowerCase())
 
   return (
     <section id="videos" className="videos section relative overflow-hidden rounded-xl border border-white/10 bg-black/50 py-24 shadow-2xl backdrop-blur-md">
@@ -151,9 +151,15 @@ const Videos = () => {
         </div>
 
         <div className="flex flex-wrap" data-aos="fade-up" data-aos-delay="200">
-          {filteredVideos.map((video, index) => (
-            <VideoCard key={index} video={video} />
-          ))}
+          {filteredVideos.length > 0 ? (
+            filteredVideos.map((video) => (
+              <VideoCard key={`${activeCategory}-${video.youtubeId}`} video={video} />
+            ))
+          ) : (
+            <div className="w-full text-center py-12">
+              <p className="text-white/60 text-lg">No videos found in this category.</p>
+            </div>
+          )}
         </div>
       </div>
     </section>

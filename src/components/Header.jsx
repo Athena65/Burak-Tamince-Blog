@@ -76,7 +76,7 @@ const Header = () => {
       </header>
       {isMenuOpen && (
         <div
-          className="fixed inset-0 z-[9996] bg-black/50 xl:hidden"
+          className="fixed inset-0 z-[1] bg-black/50 xl:hidden"
           onClick={() => setIsMenuOpen(false)}
         />
       )}
