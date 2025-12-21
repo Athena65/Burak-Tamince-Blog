@@ -25,7 +25,7 @@ const VideoCard = ({ video }) => {
 
           {/* Category Badge */}
           <div className="absolute left-4 top-4">
-            <span className="rounded-md bg-black/60 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+            <span className="rounded-md bg-black/50 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
               {video.category}
             </span>
           </div>

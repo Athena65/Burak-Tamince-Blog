@@ -86,7 +86,7 @@ const Hero = () => {
 
       <section
         id="hero"
-        className="hero section relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0a0a0a] z-[10]"
+        className="hero section relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0a0a0a] z-[10] !m-0"
       >
 
         {/* Decorative Network Grid */}

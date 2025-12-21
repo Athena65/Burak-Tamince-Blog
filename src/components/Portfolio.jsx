@@ -34,7 +34,7 @@ const PortfolioCard = ({ item, index, onToggle, onOpenLightbox }) => {
           {/* Floating Tech Badges */}
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
             {item.tech.slice(0, 2).map((t, i) => (
-              <span key={i} className="rounded-md bg-black/60 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+              <span key={i} className="rounded-md bg-black/50 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
                 {t}
               </span>
             ))}
@@ -43,7 +43,7 @@ const PortfolioCard = ({ item, index, onToggle, onOpenLightbox }) => {
 
         {/* Card Body */}
         <div className="flex flex-col p-6">
-          <h4 className="mb-3 text-xl font-bold text-white group-hover:text-accent transition-colors duration-300">
+          <h4 className="mb-3 text-xl font-bold text-white group-hover:text-accent transition-colors duration-100">
             {item.title}
           </h4>
           <p className="mb-4 text-sm text-white/60 line-clamp-2">
@@ -245,7 +245,7 @@ const Portfolio = () => {
             <button
               key={cat.key}
               onClick={() => setFilterKey(cat.key)}
-              className={`rounded-full px-6 py-2 text-sm font-semibold transition-all duration-300 ${filterKey === cat.key
+              className={`rounded-full px-6 py-2 text-sm font-semibold transition-all duration-100 ${filterKey === cat.key
                 ? 'bg-accent text-white shadow-lg shadow-accent/20'
                 : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
                 }`}

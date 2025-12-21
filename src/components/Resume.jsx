@@ -4,7 +4,7 @@ const Resume = () => {
   const [showPreview, setShowPreview] = useState(false)
 
   return (
-    <section id="resume" className="resume section relative rounded-xl border border-white/10 bg-black/40 py-24 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[12px] z-[5]">
+    <section id="resume" className="resume section relative rounded-xl border border-white/10 bg-black/50 py-24 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[12px] z-[5]">
       {/* Background accents container - maintains containment while letting the preview pop out */}
       <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
         <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-accent/10 blur-[100px]"></div>

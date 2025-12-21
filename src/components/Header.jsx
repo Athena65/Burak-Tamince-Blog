@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useScroll } from '../hooks/useScroll'
-import { smoothScrollTo } from '../utils/scroll'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -16,8 +15,25 @@ const Header = () => {
     { id: 'videos', icon: 'bi-youtube', label: 'Videos' },
   ]
 
-  const handleNavClick = () => {
+  // Close mobile menu when resizing to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1280) { // xl breakpoint
+        setIsMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const handleNavClick = (e, id) => {
+    // Close mobile menu
     setIsMenuOpen(false)
+
+    // We let the native anchor behavior handle the scroll to the ID.
+    // This is cleaner and avoids unnecessary history state manipulation
+    // that could trigger Chrome's 'intermediate navigation' warnings.
   }
 
   const toggleMenu = () => {
@@ -32,13 +48,13 @@ const Header = () => {
       ></i>
       <header
         id="header"
-        className={`fixed z-[10000] transition-all duration-300 ease-in-out
+        className={`fixed z-[10000] transition-all duration-100 ease-in-out
           /* Mobile: Top Bar Overlay */
           left-0 top-0 w-full overflow-hidden
           ${isMenuOpen ? 'h-auto py-8 bg-black/95 backdrop-blur-xl border-b border-white/10 opacity-100 visible' : 'h-0 opacity-0 invisible xl:h-screen xl:opacity-100 xl:visible'}
           
-          /* Desktop: Sidebar Reset */
-          xl:left-0 xl:top-0 xl:w-auto xl:bg-transparent xl:border-none xl:py-0 xl:flex xl:flex-col xl:justify-start xl:pt-20 xl:px-4 xl:backdrop-blur-none xl:overflow-visible
+          /* Desktop: Sidebar Reset - Centered vertically */
+          xl:left-0 xl:top-0 xl:w-auto xl:bg-transparent xl:border-none xl:py-0 xl:flex xl:flex-col xl:justify-center xl:px-4 xl:backdrop-blur-none xl:overflow-visible
         `}
       >
         <nav id="navmenu" className="navmenu w-full xl:w-[140px]">
@@ -64,8 +80,8 @@ const Header = () => {
                 >
                   <i className={`${item.icon} text-2xl xl:text-lg xl:mr-3 xl:text-center xl:w-4 flex-shrink-0`}></i>
 
-                  {/* Label: Hidden on mobile (icon only), hidden on desktop default (w-0 or hidden), shown on desktop hover */}
-                  <span className="hidden xl:hidden xl:group-hover:inline-block xl:pl-0 whitespace-nowrap opacity-0 xl:group-hover:opacity-100 transition-opacity duration-300 delay-75">
+                  {/* Label: Shown on desktop hover */}
+                  <span className="hidden xl:group-hover:inline-block xl:pl-0 whitespace-nowrap opacity-0 xl:group-hover:opacity-100 transition-all duration-300 delay-75">
                     {item.label}
                   </span>
                 </a>
@@ -85,4 +101,3 @@ const Header = () => {
 }
 
 export default Header
-

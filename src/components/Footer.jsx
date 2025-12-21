@@ -2,7 +2,7 @@ const Footer = () => {
   return (
     <footer
       id="footer"
-      className="footer relative overflow-hidden border-t border-white/5 bg-black/80 py-16 backdrop-blur-xl"
+      className="footer relative overflow-hidden border-t border-white/5 bg-[#0a0a0a] py-16 backdrop-blur-xl"
     >
       {/* Subtle background glow */}
       <div className="absolute left-1/2 top-0 -translate-x-1/2 h-32 w-1/2 bg-accent/10 blur-[100px] pointer-events-none"></div>
