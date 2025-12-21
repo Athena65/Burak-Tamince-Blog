@@ -32,13 +32,19 @@ jobs:
 
       - name: Copy assets to public
         run: |
-          if (Test-Path ".\assets") {
-            Copy-Item -Path ".\assets\*" -Destination ".\public\assets\" -Recurse -Force
-          }
-        shell: pwsh
+          if [ -d "./assets" ]; then
+            cp -r ./assets/* ./public/assets/ 2>/dev/null || true
+          fi
 
       - name: Build
         run: npm run build
+
+      - name: Ensure .nojekyll exists in dist
+        run: |
+          touch dist/.nojekyll
+          if [ -f "public/.nojekyll" ]; then
+            cp public/.nojekyll dist/.nojekyll
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
