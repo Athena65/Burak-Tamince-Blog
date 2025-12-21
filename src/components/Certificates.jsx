@@ -133,7 +133,7 @@ const Certificates = () => {
                         rel="noopener noreferrer"
                         className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-accent/20 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-accent hover:shadow-lg hover:shadow-accent/40"
                       >
-                        Verify PDF
+                        Verify
                         <i className="bi bi-patch-check"></i>
                       </a>
                     ) : (
