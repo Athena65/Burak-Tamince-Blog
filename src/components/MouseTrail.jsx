@@ -13,7 +13,7 @@ const MouseTrail = () => {
                     y: e.clientY,
                     id: `${Date.now()}-${dotIdRef.current++}`
                 }
-                return [...prev.slice(-50), newDot]
+                return [...prev.slice(-80), newDot]
             })
             lastPosRef.current = { x: e.clientX, y: e.clientY }
         }
@@ -37,7 +37,7 @@ const MouseTrail = () => {
             {trail.map((dot, i) => (
                 <div
                     key={dot.id}
-                    className="absolute rounded-full bg-accent"
+                    className="absolute rounded-full bg-accent-400"
                     style={{
                         left: dot.x,
                         top: dot.y,

@@ -7,7 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        accent: '#0563bb',
+        accent: {
+          50: '#f0f7ff',
+          100: '#e0effe',
+          200: '#badffd',
+          300: '#7cc2fb',
+          400: '#38a2f7',
+          500: '#0e85db',
+          600: '#0563bb',
+          700: '#06519b',
+          800: '#0a457f',
+          900: '#0e3b6a',
+          950: '#092545',
+          DEFAULT: '#0563bb',
+        },
         heading: '#45505b',
         default: '#272829',
         nav: '#45505b',

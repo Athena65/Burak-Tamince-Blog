@@ -43,7 +43,7 @@ const Header = () => {
   return (
     <>
       <i
-        className={`header-toggle bi ${isMenuOpen ? 'bi-x' : 'bi-list'} fixed right-4 top-4 z-[10001] flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-white/10 bg-white/5 text-2xl text-white backdrop-blur-md transition-all duration-300 hover:bg-accent hover:border-accent xl:hidden shadow-lg shadow-black/20`}
+        className={`header-toggle bi ${isMenuOpen ? 'bi-x' : 'bi-list'} fixed right-4 top-4 z-[10001] flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-white/10 bg-white/5 text-2xl text-white backdrop-blur-md transition-all duration-100 hover:bg-accent hover:border-accent xl:hidden shadow-lg shadow-black/20`}
         onClick={toggleMenu}
       ></i>
       <header
@@ -64,7 +64,7 @@ const Header = () => {
                 <a
                   href={`#${item.id}`}
                   onClick={(e) => handleNavClick(e, item.id)}
-                  className={`group flex items-center overflow-hidden rounded-full font-medium text-white transition-all duration-300
+                  className={`group flex items-center overflow-hidden rounded-full font-medium text-white transition-all duration-100
                     
                     /* Mobile Item Styles */
                     justify-center items-center p-2 text-xl hover:text-accent
@@ -75,13 +75,13 @@ const Header = () => {
                       ? 'text-accent xl:text-white xl:w-12 xl:bg-accent xl:border-accent xl:shadow-lg xl:shadow-accent/40'
                       : 'xl:w-12 xl:bg-white/5 xl:border-white/10'
                     }
-                    xl:hover:w-full xl:hover:bg-accent xl:hover:border-accent
+                    xl:hover:w-full xl:hover:bg-accent xl:hover:border-accent xl:hover:text-white
                   `}
                 >
                   <i className={`${item.icon} text-2xl xl:text-lg xl:mr-3 xl:text-center xl:w-4 flex-shrink-0`}></i>
 
                   {/* Label: Shown on desktop hover */}
-                  <span className="hidden xl:group-hover:inline-block xl:pl-0 whitespace-nowrap opacity-0 xl:group-hover:opacity-100 transition-all duration-300 delay-75">
+                  <span className="hidden xl:group-hover:inline-block xl:pl-0 whitespace-nowrap opacity-0 xl:group-hover:opacity-100 transition-all duration-100 delay-75">
                     {item.label}
                   </span>
                 </a>
