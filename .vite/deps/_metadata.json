@@ -1,0 +1,61 @@
+{
+  "hash": "a22c69e4",
+  "configHash": "64424233",
+  "lockfileHash": "f51d4858",
+  "browserHash": "cba08f7d",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "4d093a21",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "e8ca6b7a",
+      "needsInterop": true
+    },
+    "aos": {
+      "src": "../../node_modules/aos/dist/aos.js",
+      "file": "aos.js",
+      "fileHash": "48cb2f57",
+      "needsInterop": true
+    },
+    "yet-another-react-lightbox": {
+      "src": "../../node_modules/yet-another-react-lightbox/dist/index.js",
+      "file": "yet-another-react-lightbox.js",
+      "fileHash": "ab26d999",
+      "needsInterop": false
+    },
+    "isotope-layout": {
+      "src": "../../node_modules/isotope-layout/js/isotope.js",
+      "file": "isotope-layout.js",
+      "fileHash": "e0cb7dd9",
+      "needsInterop": true
+    },
+    "imagesloaded": {
+      "src": "../../node_modules/imagesloaded/imagesloaded.js",
+      "file": "imagesloaded.js",
+      "fileHash": "3376fc4f",
+      "needsInterop": true
+    },
+    "typed.js": {
+      "src": "../../node_modules/typed.js/dist/typed.module.js",
+      "file": "typed__js.js",
+      "fileHash": "98b172d6",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-HCGKX5ED": {
+      "file": "chunk-HCGKX5ED.js"
+    },
+    "chunk-WNPTCGAH": {
+      "file": "chunk-WNPTCGAH.js"
+    },
+    "chunk-5WRI5ZAA": {
+      "file": "chunk-5WRI5ZAA.js"
+    }
+  }
+}
