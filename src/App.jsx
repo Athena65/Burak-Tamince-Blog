@@ -10,6 +10,7 @@ import Portfolio from './components/Portfolio'
 import Videos from './components/Videos'
 import Footer from './components/Footer'
 import ScrollTop from './components/ScrollTop'
+import MouseTrail from './components/MouseTrail'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
@@ -38,6 +39,7 @@ function App() {
       </main>
       <Footer />
       <ScrollTop />
+      <MouseTrail />
     </div>
   )
 }

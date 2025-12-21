@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTyped } from '../hooks/useTyped'
 
 const CodeWindow = () => {
@@ -64,57 +64,6 @@ const CodeWindow = () => {
   )
 }
 
-const MouseTrail = () => {
-  const dotIdRef = useRef(0)
-  const [trail, setTrail] = useState([])
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setTrail((prev) => {
-        const newDot = {
-          x: e.clientX,
-          y: e.clientY,
-          id: `${Date.now()}-${dotIdRef.current++}`
-        }
-        return [...prev.slice(-50), newDot] // Increased trail length
-      })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTrail((prev) => {
-        if (prev.length === 0) return prev
-        const shifted = prev.slice(1)
-        return shifted
-      })
-    }, 70) // Slower fade
-    return () => clearInterval(interval)
-  }, [])
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-[50] overflow-hidden">
-      {trail.map((dot, i) => (
-        <div
-          key={dot.id}
-          className="absolute rounded-full bg-accent/40"
-          style={{
-            left: dot.x,
-            top: dot.y,
-            width: `${(i / trail.length) * 10}px`,
-            height: `${(i / trail.length) * 10}px`,
-            opacity: (i / trail.length) * 50,
-            transform: 'translate(-50%, -50%)',
-            transition: 'opacity 0.2s linear, width 0.2s linear, height 0.2s linear',
-          }}
-        />
-      ))}
-    </div>
-  )
-}
 
 const Hero = () => {
   const typedStrings = useMemo(() => [
@@ -139,8 +88,6 @@ const Hero = () => {
         id="hero"
         className="hero section relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0a0a0a] z-[10]"
       >
-        {/* Mouse Trail Effect - Componentized to prevent re-renders */}
-        <MouseTrail />
 
         {/* Decorative Network Grid */}
         <div className="absolute inset-0 z-[0] opacity-[0.03]">
