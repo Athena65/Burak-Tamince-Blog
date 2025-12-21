@@ -33,7 +33,7 @@ const MouseTrail = () => {
     }, [])
 
     return (
-        <div className="mouse-trail-container pointer-events-none fixed inset-0 z-[9999] overflow-hidden ">
+        <div className="mouse-trail-container pointer-events-none fixed inset-0 z-[5] overflow-hidden ">
             {trail.map((dot, i) => (
                 <div
                     key={dot.id}
