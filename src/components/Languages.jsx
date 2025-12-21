@@ -51,15 +51,14 @@ const Languages = () => {
           </h2>
           <p className="m-0 text-white">My language proficiency levels in different languages</p>
         </div>
-        <div className="container" data-aos="fade-up" data-aos-delay="100">
-          <div className="flex flex-wrap justify-center gap-4">
-            {languages.map((lang, index) => (
-              <div
-                key={lang.name}
-                className="language-item w-full rounded-lg border border-white/10 bg-black/92 p-8 shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2.5 hover:border-white/20 hover:bg-black/95 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.67rem)]"
-                data-aos="fade-up"
-                data-aos-delay={(index + 2) * 100}
-              >
+        <div className="row flex flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="100">
+          {languages.map((lang, index) => (
+            <div
+              key={lang.name}
+              className="language-item col-lg-4 col-md-6 w-full rounded-lg border border-white/10 bg-black/92 p-8 shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2.5 hover:border-white/20 hover:bg-black/95 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.67rem)]"
+              data-aos="fade-up"
+              data-aos-delay={(index + 2) * 100}
+            >
                 <div className="mb-3 flex items-center justify-between">
                   <h4 className="mb-0 text-white">{lang.name}</h4>
                   <span className={`badge ${lang.badge} rounded px-2 py-1 text-sm text-white`}>
@@ -75,9 +74,10 @@ const Languages = () => {
                         </small>
                         <small className="text-white">{skill.level}</small>
                       </div>
-                      <div className="h-2 overflow-hidden rounded bg-[rgba(40,40,40,0.8)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                      <div className="progress h-2 overflow-hidden rounded bg-[rgba(40,40,40,0.8)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
                         <div
-                          className={`${skill.color} h-full rounded transition-all duration-1000 ease-in-out`}
+                          className={`progress-bar ${skill.color} h-full rounded transition-all duration-1000 ease-in-out`}
+                          role="progressbar"
                           style={{ width: `${skill.percent}%` }}
                         ></div>
                       </div>
@@ -91,7 +91,6 @@ const Languages = () => {
                 )}
               </div>
             ))}
-          </div>
         </div>
       </div>
     </section>

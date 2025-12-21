@@ -1,11 +1,124 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Isotope from 'isotope-layout'
 import imagesLoaded from 'imagesloaded'
 import GLightbox from 'glightbox'
 
+const PortfolioCard = ({ item, onToggle }) => {
+  const [showFeatures, setShowFeatures] = useState(false)
+
+  const handleToggle = () => {
+    setShowFeatures(!showFeatures)
+
+    // Refresh Isotope layout at multiple intervals to ensure smooth expansion
+    const intervals = [50, 150, 300, 550]
+    intervals.forEach(ms => {
+      setTimeout(() => {
+        onToggle()
+      }, ms)
+    })
+  }
+
+  const handlePreview = (e) => {
+    const btn = e.currentTarget
+    btn.blur() // Fix for aria-hidden accessibility error
+    const lightbox = GLightbox({
+      elements: [{
+        href: item.image,
+        title: item.title,
+        description: item.description || ''
+      }]
+    })
+    lightbox.open()
+  }
+
+  return (
+    <div className={`isotope-item ${item.category} p-3 w-full md:w-1/2 lg:w-1/3`}>
+      <div className="relative group overflow-visible rounded-2xl border border-white/10 bg-white/5 transition-all duration-500 hover:border-white/20 hover:bg-white/10 hover:shadow-2xl">
+        {/* Card Head: Image */}
+        <div className="relative aspect-video overflow-hidden rounded-t-2xl">
+          <img
+            src={item.image}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+            alt={item.title}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+
+          {/* Floating Tech Badges */}
+          <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+            {item.tech.slice(0, 2).map((t, i) => (
+              <span key={i} className="rounded-md bg-black/60 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Card Body */}
+        <div className="flex flex-col p-6">
+          <h4 className="mb-3 text-xl font-bold text-white group-hover:text-accent transition-colors duration-300">
+            {item.title}
+          </h4>
+          <p className="mb-4 text-sm text-white/60 line-clamp-2">
+            {item.description}
+          </p>
+
+          {/* Features List (Collapsible) */}
+          <div className="mb-6 min-h-[40px]">
+            <button
+              onClick={handleToggle}
+              className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-accent transition-all hover:text-white"
+            >
+              {showFeatures ? 'Hide Features' : 'Show Key Features'}
+              <i className={`bi bi-chevron-${showFeatures ? 'up' : 'down'}`}></i>
+            </button>
+
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${showFeatures ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+              <ul className="space-y-1 pb-4">
+                {item.features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-2 text-xs text-white/70">
+                    <span className="h-1 w-1 rounded-full bg-accent"></span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
+            <button
+              onClick={handlePreview}
+              className="flex items-center gap-2 text-sm font-medium text-white/60 transition-colors hover:text-white"
+            >
+              <i className="bi bi-zoom-in text-lg"></i>
+              Preview
+            </button>
+            <a
+              href={item.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-accent hover:shadow-lg hover:shadow-accent/40"
+            >
+              GitHub
+              <i className="bi bi-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const Portfolio = () => {
   const isotopeRef = useRef(null)
   const isotopeInstanceRef = useRef(null)
+  const [filterKey, setFilterKey] = useState('*')
+
+  const refreshIsotope = () => {
+    if (isotopeInstanceRef.current) {
+      isotopeInstanceRef.current.layout()
+    }
+  }
 
   useEffect(() => {
     GLightbox({
@@ -19,8 +132,6 @@ const Portfolio = () => {
         isotopeInstanceRef.current = new Isotope(isotopeRef.current, {
           itemSelector: '.isotope-item',
           layoutMode: 'masonry',
-          filter: '*',
-          sortBy: 'original-order',
         })
       })
     }
@@ -32,121 +143,132 @@ const Portfolio = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (isotopeInstanceRef.current) {
+      filterKey === '*'
+        ? isotopeInstanceRef.current.arrange({ filter: `*` })
+        : isotopeInstanceRef.current.arrange({ filter: `.${filterKey}` })
+    }
+  }, [filterKey])
+
   const portfolioItems = [
     {
       title: 'Rates from Everywhere',
+      category: 'web',
       description: 'A platform that aggregates product ratings from multiple websites and identifies categories.',
       image: '/assets/img/portfolio/ratesfromeverywhere.png',
       githubUrl: 'https://github.com/Athena65/ratesfromeverywhere2',
+      tech: ['React', 'Node.js', 'Python'],
+      features: ['Multi-site Scraper', 'Sentiment Analysis', 'Category Classification']
     },
     {
       title: 'Dinner Project with Flutter',
+      category: 'mobile',
       description: 'A Flutter-based mobile app for providing recipes and restaurant suggestions.',
       image: '/assets/img/portfolio/dinnerproject.png',
       githubUrl: 'https://github.com/Athena65/Dinner_Project_Flutter',
+      tech: ['Flutter', 'Firebase', 'Dart'],
+      features: ['Real-time Search', 'Offline Access', 'Personalized Suggestions']
     },
     {
-      title: 'Binary to Decimal with Arduino',
-      description: 'An Arduino project that converts binary numbers to decimal and displays them on an LCD screen.',
+      title: 'BinaryToDecimalWithArduino',
+      category: 'arduino',
+      description: 'This Arduino-based project converts 4-bit binary inputs into decimal/hexadecimal and displays results on an LCD monitor.',
       image: '/assets/img/portfolio/binarytodecimal.png',
       githubUrl: 'https://github.com/Athena65/BinaryToDecimalWithArduino',
+      tech: ['Arduino', 'C++', 'I2C'],
+      features: ['Binary Input via Buttons', 'Real-Time Conversion', 'LCD Status Display'],
+      hardware: ['Arduino Uno', '4 Push Buttons', '16x2 LCD display', '10k Resistors']
     },
     {
-      title: 'E-Commerce Site with Laravel',
-      description: 'An e-commerce platform built with Laravel, featuring an admin panel for product and order management.',
+      title: 'E-Commerce Laravel',
+      category: 'web',
+      description: 'Feature-rich e-commerce platform with a comprehensive admin panel for efficient management.',
       image: '/assets/img/portfolio/ecommercelaravel.png',
       githubUrl: 'https://github.com/Athena65/E-Commerce-Laravel',
+      tech: ['Laravel', 'PHP', 'MySQL'],
+      features: ['User Authentication', 'Product/Order Management', 'Shopping Cart', 'Responsive Design']
     },
     {
       title: 'ThinkSpeak Data Fetch',
-      description: 'An Arduino project that fetches data from the internet and displays it on an LCD screen.',
+      category: 'arduino',
+      description: 'IoT project fetching weather and sensor data from ThinkSpeak API to an LCD interface.',
       image: '/assets/img/portfolio/thinkspeakdatafetch.jpg',
       githubUrl: 'https://github.com/Athena65/ThinkSpeakDataFetch',
+      tech: ['ESP8266', 'IoT', 'JSON'],
+      features: ['API Integration', 'Deep Sleep Mode', 'Auto-update Values']
     },
     {
-      title: 'Find Similar Products with Python',
-      description: 'A Python-based project using YOLOv8 to find similar products and extract ratings from various platforms.',
+      title: 'Find Similar Products',
+      category: 'ai',
+      description: 'AI-powered project using YOLOv8 to identify products and extract ratings from various platforms.',
       image: '/assets/img/portfolio/findsimilar,ratingextraction.png',
       githubUrl: 'https://github.com/Athena65/python_find_similar_products',
+      tech: ['Python', 'YOLOv8', 'PyTorch'],
+      features: ['Image Recognition', 'OCR Text Extraction', 'Cross-platform Matching']
     },
     {
-      title: 'Virtual Cash Application with Java',
-      description: 'A Java-based virtual cash application experiment built using Eclipse IDE.',
+      title: 'VirtualCash',
+      category: 'software',
+      description: 'Simulated virtual banking system allowing users to manage accounts and monitor financial activities securely.',
       image: '/assets/img/portfolio/virtualcashjava.png',
       githubUrl: 'https://github.com/Athena65/VirtualCash',
+      tech: ['Java', 'Eclipse', 'Swing'],
+      features: ['Security Deposit/Withdraw', 'Fund Transfers', 'Transaction History']
     },
   ]
 
+  const categories = [
+    { label: 'All', key: '*' },
+    { label: 'Web', key: 'web' },
+    { label: 'Mobile', key: 'mobile' },
+    { label: 'Arduino', key: 'arduino' },
+    { label: 'AI', key: 'ai' },
+  ]
+
   return (
-    <section id="portfolio" className="portfolio section relative overflow-hidden rounded-lg border border-white/5 bg-black/85 py-16 shadow-[0_8px_32px_rgba(0,0,0,0.1)] backdrop-blur-[5px]">
-      <div className="container">
+    <section id="portfolio" className="portfolio section relative overflow-hidden rounded-xl border border-white/10 bg-black/50 py-24 shadow-2xl backdrop-blur-md">
+      {/* Background Glows */}
+      <div className="absolute -left-24 top-0 h-96 w-96 rounded-full bg-accent/10 blur-[120px]"></div>
+      <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-blue-500/5 blur-[120px]"></div>
+
+      <div className="container relative z-10 mx-auto px-4">
         <div className="section-title mb-16 text-center" data-aos="fade-up">
-          <h2 className="relative mb-5 pb-5 text-3xl font-bold text-white">
+          <h2 className="relative mb-6 inline-block pb-4 text-4xl font-extrabold tracking-tight text-white uppercase">
             My GitHub Projects
-            <span className="absolute bottom-0 left-1/2 h-[3px] w-[60px] -translate-x-1/2 bg-accent"></span>
+            <span className="absolute bottom-0 left-1/2 h-[4px] w-[80px] -translate-x-1/2 rounded-full bg-gradient-to-r from-accent to-blue-500"></span>
           </h2>
-          <p className="m-0 text-white">
-            Explore some of the projects I have worked on, ranging from Arduino experiments to web and mobile applications. Each project showcases unique functionalities, innovative ideas, and real-world applications. Click on "More Details" to visit the respective GitHub repositories for code and documentation.
+          <p className="mx-auto max-w-3xl text-lg text-white/70 leading-relaxed">
+            Explore my technical journey through code. From hardware integration to sophisticated web architectures,
+            each repository represents a solved challenge and a new skill mastered.
           </p>
         </div>
-        <div className="container">
-          <div className="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
-            <div
-              ref={isotopeRef}
-              className="isotope-container flex flex-wrap gap-4"
-              data-aos="fade-up"
-              data-aos-delay="200"
+
+        {/* Filter Tabs */}
+        <div className="mb-12 flex flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="100">
+          {categories.map((cat) => (
+            <button
+              key={cat.key}
+              onClick={() => setFilterKey(cat.key)}
+              className={`rounded-full px-6 py-2 text-sm font-semibold transition-all duration-300 ${filterKey === cat.key
+                ? 'bg-accent text-white shadow-lg shadow-accent/20'
+                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                }`}
             >
-              {portfolioItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="portfolio-item isotope-item group w-full rounded-lg border border-white/10 bg-black/92 shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2.5 hover:border-white/20 hover:bg-black/95 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.67rem)]"
-                >
-                  <img
-                    src={item.image}
-                    className="h-auto w-full rounded-t-lg transition-all duration-300 hover:scale-[1.02] hover:brightness-110"
-                    alt={item.title}
-                  />
-                  <div className="portfolio-info absolute bottom-[-100%] left-3 right-3 z-[3] rounded-lg border border-white/10 bg-black/95 p-4 opacity-0 transition-all duration-300 group-hover:bottom-0 group-hover:opacity-100">
-                    <h4 className="mb-2 pr-12 text-lg font-semibold text-white transition-colors duration-300 hover:text-accent">
-                      {item.title}
-                    </h4>
-                    <p className="mb-0 pr-12 text-sm text-white">{item.description}</p>
-                    <a
-                      href={item.image}
-                      title={item.title}
-                      data-description={item.description}
-                      data-gallery="portfolio-gallery-all"
-                      className="preview-link absolute right-12 top-1/2 -translate-y-1/2 text-2xl text-white transition-all duration-300 hover:scale-125 hover:text-accent"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        GLightbox({
-                          elements: [
-                            {
-                              href: item.image,
-                              title: item.title,
-                              description: item.description,
-                            },
-                          ],
-                        }).open()
-                      }}
-                    >
-                      <i className="bi bi-zoom-in"></i>
-                    </a>
-                    <a
-                      href={item.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="More Details"
-                      className="details-link absolute right-3 top-1/2 -translate-y-1/2 text-[28px] text-white transition-all duration-300 hover:scale-125 hover:text-accent"
-                    >
-                      <i className="bi bi-link-45deg"></i>
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        <div
+          ref={isotopeRef}
+          className="isotope-container flex flex-wrap"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
+          {portfolioItems.map((item, index) => (
+            <PortfolioCard key={index} item={item} onToggle={refreshIsotope} />
+          ))}
         </div>
       </div>
     </section>

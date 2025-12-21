@@ -84,11 +84,11 @@ const Skills = () => {
       className="progress-item mb-4 rounded-lg border border-white/10 bg-black/92 p-4 shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 hover:border-white/20 hover:bg-black/95 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
       data-value={skill.value}
     >
-      <span className="skill mb-1.5 block text-sm font-semibold text-white">
+      <div className="skill mb-1.5 flex items-center justify-between text-sm font-semibold text-white">
         <span>{skill.name}</span>
-        <i className="val float-right font-bold text-accent">{skill.value}%</i>
-      </span>
-      <div className="progress-bar-wrap h-2.5 overflow-hidden rounded bg-[rgba(40,40,40,0.8)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+        <span className="val font-bold text-white">{skill.value}%</span>
+      </div>
+      <div className="progress h-2 overflow-hidden rounded bg-[rgba(40,40,40,0.8)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
         <div
           className="progress-bar h-full rounded bg-accent transition-all duration-1000 ease-in-out"
           role="progressbar"
@@ -114,17 +114,17 @@ const Skills = () => {
             My expertise in software development includes the following skills and technical proficiencies
           </p>
         </div>
-        <div className="container" data-aos="fade-up" data-aos-delay="100">
+        <div className="row flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="100">
           <div
             ref={skillsContainerRef}
-            className="skills-content skills-animation flex flex-wrap gap-4 rounded-lg bg-black/92 p-8 shadow-[0_5px_15px_rgba(0,0,0,0.05)]"
+            className="skills-content skills-animation flex w-full flex-wrap gap-4"
           >
-            <div className="left-skills w-full lg:w-1/2">
+            <div className="left-skills w-full lg:w-[calc(50%-0.5rem)]">
               {leftSkills.map((skill) => (
                 <SkillItem key={skill.name} skill={skill} />
               ))}
             </div>
-            <div className="right-skills w-full lg:w-1/2">
+            <div className="right-skills w-full lg:w-[calc(50%-0.5rem)]">
               {rightSkills.map((skill) => (
                 <SkillItem key={skill.name} skill={skill} />
               ))}

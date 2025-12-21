@@ -1,11 +1,27 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import GLightbox from 'glightbox'
 
 const Certificates = () => {
+  const lightboxRef = useRef(null)
+
   useEffect(() => {
-    GLightbox({
-      selector: '.glightbox',
-    })
+    if (!lightboxRef.current) {
+      lightboxRef.current = GLightbox({
+        selector: '.glightbox',
+        touchNavigation: true,
+        loop: false,
+        autofocusVideo: false,
+        openEffect: 'fade',
+        closeEffect: 'fade',
+      })
+    }
+
+    return () => {
+      if (lightboxRef.current) {
+        lightboxRef.current.destroy()
+        lightboxRef.current = null
+      }
+    }
   }, [])
 
   const certificates = [
@@ -80,9 +96,8 @@ const Certificates = () => {
             Below are some of the professional certificates I've earned throughout my career. Each certificate represents my commitment to continuous learning and professional development in the field of technology.
           </p>
         </div>
-        <div className="container" data-aos="fade-up" data-aos-delay="100">
-          <div className="flex flex-wrap justify-center gap-4">
-            {certificates.map((cert, index) => (
+        <div className="row flex flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="100">
+          {certificates.map((cert, index) => (
               <div
                 key={index}
                 className={`certificate-item w-full cursor-pointer rounded-lg border border-white/10 bg-black/92 shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2.5 hover:border-white/20 hover:bg-black/95 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.67rem)] ${
@@ -123,6 +138,7 @@ const Certificates = () => {
                     title={cert.title}
                     data-gallery={cert.gallery}
                     className="glightbox certificate-link block no-underline"
+                    tabIndex={0}
                   >
                     <img
                       src={cert.image}
@@ -145,7 +161,6 @@ const Certificates = () => {
                 )}
               </div>
             ))}
-          </div>
         </div>
       </div>
     </section>
