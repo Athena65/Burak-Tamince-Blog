@@ -1,0 +1,8 @@
+# robots.txt for buraktamince.net.tr
+# Allow all web crawlers to access all content
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://buraktamince.net.tr/sitemap.xml
