@@ -60,6 +60,12 @@ const Certificates = () => {
       image: '/assets/certificates/img/ranks.jpeg',
       hasLink: false,
     },
+    {
+      title: 'AI Training Participation Certificate',
+      description: 'Gebze Technical University & SEM – AI Training participation certificate',
+      image: '/assets/certificates/img/ai-certificate-bt.jpeg',
+      hasLink: false,
+    },
   ]
 
   const handleImageClick = (index) => {
