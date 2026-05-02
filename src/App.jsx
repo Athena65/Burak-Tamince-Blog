@@ -26,7 +26,7 @@ function App() {
 
   return (
     <div className="index-page">
-      <main className="main min-h-screen relative">
+      <main id="main-content" className="main min-h-screen relative">
         <Header />
         <Hero />
         <About />

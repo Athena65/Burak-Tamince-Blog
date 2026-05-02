@@ -80,7 +80,7 @@ const About = () => {
               <img
                 src="/assets/img/profile-img.jpg"
                 className="relative h-auto max-w-[320px] w-full rounded-2xl border border-white/20 shadow-2xl transition-all duration-500 group-hover:scale-[1.02]"
-                alt="Burak Tamince"
+                alt="Burak Tamince — Computer Engineer and full-stack developer, Istanbul; ASP.NET Core, React, AWS, PHP, Moodle."
               />
             </div>
           </div>
