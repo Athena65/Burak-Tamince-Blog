@@ -86,7 +86,7 @@ const Hero = () => {
 
       <section
         id="hero"
-        className="hero section relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0a0a0a] z-[10] !m-0"
+        className="hero section relative flex min-h-screen flex-col overflow-hidden bg-[#0a0a0a] z-[10] !m-0"
       >
 
         {/* Decorative Network Grid */}
@@ -101,7 +101,8 @@ const Hero = () => {
           </svg>
         </div>
 
-        <div className="container relative z-[10] mx-auto">
+        <div className="relative z-[10] mx-auto flex min-h-0 w-full flex-1 flex-col justify-center">
+        <div className="container mx-auto">
           <div className="flex flex-col items-center gap-16 lg:flex-row lg:text-left">
 
             {/* Text Side */}
@@ -172,9 +173,10 @@ const Hero = () => {
 
           </div>
         </div>
+        </div>
 
-        {/* Scroll Down Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30 select-none animate-bounce">
+        {/* Scroll Down Indicator — flex row at bottom so it never overlaps CTAs */}
+        <div className="relative z-[10] flex shrink-0 flex-col items-center gap-2 pb-[clamp(1rem,4vh,2.5rem)] pt-6 opacity-30 select-none animate-bounce">
           <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-white">Scroll Down</span>
           <i className="bi bi-chevron-double-down text-lg"></i>
         </div>
