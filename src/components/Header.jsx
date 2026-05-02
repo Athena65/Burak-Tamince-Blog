@@ -57,14 +57,18 @@ const Header = () => {
           xl:left-0 xl:top-0 xl:w-auto xl:bg-transparent xl:border-none xl:py-0 xl:flex xl:flex-col xl:justify-center xl:px-4 xl:backdrop-blur-none xl:overflow-visible
         `}
       >
-        <nav id="navmenu" className="navmenu w-full xl:w-[140px]">
-          <ul className={`m-0 p-0 flex items-center justify-center gap-6 flex-wrap xl:block xl:gap-0`}>
+        <nav id="navmenu" className="navmenu w-full overflow-visible xl:w-[140px] xl:overflow-visible">
+          <ul className="m-0 flex flex-wrap items-center justify-center gap-6 overflow-visible p-0 xl:block xl:gap-0 xl:overflow-visible">
             {navItems.map((item) => (
-              <li key={item.id} className="xl:mb-3 xl:w-full">
+              <li
+                key={item.id}
+                className="relative z-0 xl:mb-3 xl:w-full xl:overflow-visible hover:z-[10050] focus-within:z-[10050]"
+              >
                 <a
                   href={`#${item.id}`}
+                  title={item.label}
                   onClick={(e) => handleNavClick(e, item.id)}
-                  className={`group flex items-center overflow-hidden rounded-full font-medium text-white transition-all duration-100
+                  className={`group flex items-center overflow-hidden rounded-full font-medium text-white transition-all duration-100 xl:overflow-visible
                     
                     /* Mobile Item Styles */
                     justify-center items-center p-2 text-xl hover:text-accent
@@ -75,13 +79,13 @@ const Header = () => {
                       ? 'text-accent xl:text-white xl:w-12 xl:bg-accent xl:border-accent xl:shadow-lg xl:shadow-accent/40'
                       : 'xl:w-12 xl:bg-white/5 xl:border-white/10'
                     }
-                    xl:hover:w-full xl:hover:bg-accent xl:hover:border-accent xl:hover:text-white
+                    xl:hover:w-max xl:hover:max-w-[min(20rem,calc(100vw-3rem))] xl:hover:bg-accent xl:hover:border-accent xl:hover:text-white
                   `}
                 >
-                  <i className={`${item.icon} text-2xl xl:text-lg xl:mr-3 xl:text-center xl:w-4 flex-shrink-0`}></i>
+                  <i className={`${item.icon} text-2xl xl:text-lg xl:mr-3 xl:w-4 flex-shrink-0 xl:text-center`}></i>
 
-                  {/* Label: Shown on desktop hover */}
-                  <span className="hidden xl:group-hover:inline-block xl:pl-0 whitespace-nowrap opacity-0 xl:group-hover:opacity-100 transition-all duration-100 delay-75">
+                  {/* Label: desktop hover; w-max on link avoids clipping to nav column width */}
+                  <span className="hidden whitespace-nowrap pl-0 opacity-0 transition-all duration-100 delay-75 xl:group-hover:inline-block xl:group-hover:opacity-100">
                     {item.label}
                   </span>
                 </a>
