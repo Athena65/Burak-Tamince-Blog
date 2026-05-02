@@ -29,6 +29,14 @@ const Certificates = () => {
       hasLink: true,
     },
     {
+      title: 'Claude Code in Action',
+      issuer: 'Anthropic',
+      date: '04/04/2026',
+      image: '/assets/certificates/img/claudeinaction-anthropic.png',
+      verifyUrl: 'https://verify.skilljar.com/c/6jj54j3f8dix',
+      hasLink: true,
+    },
+    {
       title: 'Online Personal Development Summit',
       issuer: 'Digicertify',
       date: '15/12/2021',
