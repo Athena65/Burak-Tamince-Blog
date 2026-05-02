@@ -21,6 +21,8 @@ function App() {
       easing: 'ease-in-out',
       once: true,
       mirror: false,
+      // Below xl, observers can fail to fire; content would stay opacity:0 (black screen).
+      disable: () => typeof window !== 'undefined' && window.innerWidth < 1280,
     })
   }, [])
 

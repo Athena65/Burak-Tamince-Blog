@@ -30,6 +30,15 @@ body {
   z-index: 0;
 }
 
+/* AOS pre-animate state can leave sections invisible if observers never run (common on mobile). */
+@media (max-width: 1279px) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* Scroll behavior */
 html {
   scroll-behavior: smooth;

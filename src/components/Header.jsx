@@ -49,9 +49,9 @@ const Header = () => {
       <header
         id="header"
         className={`fixed z-[10000] transition-all duration-100 ease-in-out
-          /* Mobile: Top Bar Overlay */
+          /* Mobile: Top Bar Overlay — pointer-events off when collapsed so fixed bar cannot block taps */
           left-0 top-0 w-full overflow-hidden
-          ${isMenuOpen ? 'h-auto py-8 bg-black/95 backdrop-blur-xl border-b border-white/10 opacity-100 visible' : 'h-0 opacity-0 invisible xl:h-screen xl:opacity-100 xl:visible'}
+          ${isMenuOpen ? 'pointer-events-auto h-auto py-8 bg-black/95 backdrop-blur-xl border-b border-white/10 opacity-100 visible' : 'pointer-events-none h-0 opacity-0 invisible xl:pointer-events-auto xl:h-screen xl:opacity-100 xl:visible'}
           
           /* Desktop: Sidebar Reset - Centered vertically */
           xl:left-0 xl:top-0 xl:w-auto xl:bg-transparent xl:border-none xl:py-0 xl:flex xl:flex-col xl:justify-center xl:px-4 xl:backdrop-blur-none xl:overflow-visible
