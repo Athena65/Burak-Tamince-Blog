@@ -8,7 +8,7 @@ const Header = () => {
   const navItems = [
     { id: 'hero', icon: 'bi-house', label: 'Home' },
     { id: 'about', icon: 'bi-person', label: 'About' },
-    { id: 'skills', icon: 'bi-bar-chart', label: 'Skills' },
+    { id: 'skills', icon: 'bi-briefcase', label: 'Experience & Skills' },
     { id: 'certificates', icon: 'bi-award', label: 'Certificates' },
     { id: 'resume', icon: 'bi-file-earmark-text', label: 'Resume' },
     { id: 'portfolio', icon: 'bi-images', label: 'Projects' },
