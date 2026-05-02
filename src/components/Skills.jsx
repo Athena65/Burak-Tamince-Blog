@@ -1,4 +1,6 @@
-import { useMemo, useEffect, useState } from 'react'
+import { useMemo, useEffect, useState, useRef, useCallback, useLayoutEffect } from 'react'
+
+const LG_GRID_PX = 1024
 
 const LOGOS = {
   waytogo: '/assets/skills/waytogodc_logo.jpeg',
@@ -133,6 +135,25 @@ const experienceBlocks = [
     ],
   },
   {
+    company: 'Tomya',
+    companyUrl: null,
+    logoSrc: LOGOS.tomya,
+    timeline: false,
+    roles: [
+      roleTemplate({
+        role: 'Back End Developer',
+        employment: 'Internship',
+        period: 'Jul 2022 – Sep 2022',
+        location: 'Maslak, Istanbul, Türkiye · On-site',
+        highlights: [
+          'Developed ASP.NET Core Web APIs (.NET Core 3.1 / 6), focusing on API design and database integration.',
+          'Collaborated with peers on backend best practices in a startup environment.',
+        ],
+        tags: ['ASP.NET Core', 'ASP.NET Web API', 'SQL', 'C#'],
+      }),
+    ],
+  },
+  {
     company: 'ARKHE',
     companyUrl: null,
     logoSrc: LOGOS.arkhe,
@@ -168,25 +189,6 @@ const experienceBlocks = [
           'Collaborated with the team to troubleshoot and resolve production issues quickly.',
         ],
         tags: ['SQL', 'Microsoft SQL Server'],
-      }),
-    ],
-  },
-  {
-    company: 'Tomya',
-    companyUrl: null,
-    logoSrc: LOGOS.tomya,
-    timeline: false,
-    roles: [
-      roleTemplate({
-        role: 'Back End Developer',
-        employment: 'Internship',
-        period: 'Jul 2022 – Sep 2022',
-        location: 'Maslak, Istanbul, Türkiye · On-site',
-        highlights: [
-          'Developed ASP.NET Core Web APIs (.NET Core 3.1 / 6), focusing on API design and database integration.',
-          'Collaborated with peers on backend best practices in a startup environment.',
-        ],
-        tags: ['ASP.NET Core', 'ASP.NET Web API', 'SQL', 'C#'],
       }),
     ],
   },
@@ -398,6 +400,54 @@ function roleSubtitle(block, r) {
 const Skills = () => {
   const allSkills = useMemo(() => dedupeSkills(collectAllTags(experienceBlocks)), [])
   const [tenureRef, setTenureRef] = useState(() => new Date())
+  const rapidsolCardRef = useRef(null)
+  const waytogoCardRef = useRef(null)
+  const [waytogoExpanded, setWaytogoExpanded] = useState(false)
+  const [waytogoPreviewMaxPx, setWaytogoPreviewMaxPx] = useState(null)
+  const [waytogoHasMore, setWaytogoHasMore] = useState(false)
+
+  const syncWaytogoPreviewHeight = useCallback(() => {
+    if (waytogoExpanded) {
+      setWaytogoPreviewMaxPx(null)
+      return
+    }
+    if (typeof window === 'undefined') return
+    if (window.innerWidth < LG_GRID_PX) {
+      setWaytogoPreviewMaxPx(null)
+      return
+    }
+    const h = rapidsolCardRef.current?.offsetHeight
+    if (h && h > 0) setWaytogoPreviewMaxPx(h)
+  }, [waytogoExpanded])
+
+  useLayoutEffect(() => {
+    syncWaytogoPreviewHeight()
+    const el = rapidsolCardRef.current
+    const ro = el ? new ResizeObserver(() => syncWaytogoPreviewHeight()) : null
+    if (el && ro) ro.observe(el)
+    window.addEventListener('resize', syncWaytogoPreviewHeight)
+    return () => {
+      if (ro && el) ro.unobserve(el)
+      ro?.disconnect()
+      window.removeEventListener('resize', syncWaytogoPreviewHeight)
+    }
+  }, [syncWaytogoPreviewHeight])
+
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return
+    // While expanded, keep waytogoHasMore so "Show less" stays visible (measuring uses collapsed maxHeight).
+    if (waytogoExpanded) return
+    if (!waytogoPreviewMaxPx) {
+      setWaytogoHasMore(false)
+      return
+    }
+    const node = waytogoCardRef.current
+    if (!node) return
+    const id = window.requestAnimationFrame(() => {
+      setWaytogoHasMore(node.scrollHeight > waytogoPreviewMaxPx + 6)
+    })
+    return () => window.cancelAnimationFrame(id)
+  }, [waytogoPreviewMaxPx, waytogoExpanded, tenureRef])
 
   const totalExperienceLabel = useMemo(() => {
     const months = combinedExperienceMonths(experienceBlocks, tenureRef)
@@ -428,12 +478,12 @@ const Skills = () => {
             Experience
             <span className="absolute bottom-0 left-1/2 h-[4px] w-[80px] -translate-x-1/2 rounded-full bg-gradient-to-r from-accent to-blue-500"></span>
           </h2>
-          <p className="mx-auto max-w-3xl text-lg text-white/60 leading-relaxed">
+          <p className="mx-auto max-w-7xl text-lg text-white/60 leading-relaxed">
             Real-world roles across full-stack delivery, cloud DevOps, LMS and AI-enabled products—technologies
             grounded in production work, not abstract percentages.
           </p>
           {totalExperienceLabel && (
-            <p className="mx-auto mt-5 flex max-w-3xl flex-col items-center gap-1 sm:flex-row sm:justify-center sm:gap-3">
+            <p className="mx-auto mt-5 flex max-w-7xl flex-col items-center gap-1 sm:flex-row sm:justify-center sm:gap-3">
               <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
                 Combined experience
               </span>
@@ -447,74 +497,122 @@ const Skills = () => {
           )}
         </div>
 
-        <div className="mx-auto max-w-3xl space-y-10" data-aos="fade-up" data-aos-delay="100">
+        <div
+          className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:gap-10 lg:grid-cols-2 lg:items-start"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
           {experienceBlocks.map((block, blockIdx) => {
             const showTimeline = !!block.timeline && block.roles.length > 1
+            const isRapidsol = block.company === 'Rapidsol'
+            const isWaytogo = block.company === 'Waytogo'
+            const isMobitek = block.company === 'Mobitek Marketing Group'
+            const waytogoClip =
+              isWaytogo && waytogoPreviewMaxPx != null && !waytogoExpanded
 
             return (
               <div
                 key={`${block.company}-${blockIdx}`}
-                className="flex gap-4 border-b border-white/5 pb-10 last:border-0 md:gap-6"
+                ref={isRapidsol ? rapidsolCardRef : isWaytogo ? waytogoCardRef : undefined}
+                className={`relative rounded-xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 md:p-6 ${
+                  waytogoClip ? 'overflow-hidden' : ''
+                } ${isMobitek ? 'lg:col-span-2 lg:mx-auto lg:max-w-3xl' : ''}`}
+                style={
+                  isWaytogo && waytogoPreviewMaxPx != null && !waytogoExpanded
+                    ? { maxHeight: waytogoPreviewMaxPx }
+                    : undefined
+                }
               >
-                <CompanyLogo src={block.logoSrc} company={block.company} />
-                <div className="flex min-w-0 flex-1 flex-col">
-                  <div className="shrink-0 border-b border-white/[0.07] bg-gradient-to-r from-accent-600/[0.04] via-white/[0.02] to-transparent px-0 py-3 text-left">
-                    <CompanyHeading href={block.companyUrl || undefined}>{block.company}</CompanyHeading>
-                  </div>
-
-                  {showTimeline ? (
-                    <div className="mt-6">
-                      <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/40">
-                        Part-time (Present) → Full-time → Internship
-                      </p>
-                      <div className="relative border-l border-white/15 pl-6">
-                        {block.roles.map((r, i) => (
-                          <div key={i} className="relative pb-10 last:pb-0">
-                            <span
-                              className="absolute -left-[22px] top-2 h-2.5 w-2.5 rounded-full border-2 border-[#0a0a0a] bg-accent shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"
-                              aria-hidden
-                            />
-                            <ExperienceRoleContent
-                              role={r.role}
-                              subtitle={roleSubtitle(block, r)}
-                              period={r.period}
-                              location={r.location}
-                              highlights={r.highlights}
-                              tenureRef={tenureRef}
-                            />
-                          </div>
-                        ))}
-                      </div>
+                <div className="flex gap-4 md:gap-6">
+                  <CompanyLogo src={block.logoSrc} company={block.company} />
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="shrink-0 border-b border-white/[0.07] bg-gradient-to-r from-accent-600/[0.04] via-white/[0.02] to-transparent px-0 py-3 text-left">
+                      <CompanyHeading href={block.companyUrl || undefined}>{block.company}</CompanyHeading>
                     </div>
-                  ) : (
-                    block.roles.map((r, i) => (
-                      <div key={i} className={i === 0 ? 'pt-5' : 'mt-10 border-t border-white/[0.06] pt-10'}>
-                        <ExperienceRoleContent
-                          role={r.role}
-                          subtitle={roleSubtitle(block, r)}
-                          period={r.period}
-                          location={r.location}
-                          highlights={r.highlights}
-                          tenureRef={tenureRef}
-                        />
+
+                    {showTimeline ? (
+                      <div className="mt-6">
+                        <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/40">
+                          Part-time (Present) → Full-time → Internship
+                        </p>
+                        <div className="relative border-l border-white/15 pl-6">
+                          {block.roles.map((r, i) => (
+                            <div key={i} className="relative pb-10 last:pb-0">
+                              <span
+                                className="absolute -left-[22px] top-2 h-2.5 w-2.5 rounded-full border-2 border-[#0a0a0a] bg-accent shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"
+                                aria-hidden
+                              />
+                              <ExperienceRoleContent
+                                role={r.role}
+                                subtitle={roleSubtitle(block, r)}
+                                period={r.period}
+                                location={r.location}
+                                highlights={r.highlights}
+                                tenureRef={tenureRef}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ))
-                  )}
+                    ) : (
+                      block.roles.map((r, i) => (
+                        <div key={i} className={i === 0 ? 'pt-5' : 'mt-10 border-t border-white/[0.06] pt-10'}>
+                          <ExperienceRoleContent
+                            role={r.role}
+                            subtitle={roleSubtitle(block, r)}
+                            period={r.period}
+                            location={r.location}
+                            highlights={r.highlights}
+                            tenureRef={tenureRef}
+                          />
+                        </div>
+                      ))
+                    )}
+                    {isWaytogo && waytogoExpanded && waytogoHasMore && (
+                      <div className="mt-6 flex justify-center border-t border-white/10 pt-4 sm:justify-start">
+                        <button
+                          type="button"
+                          onClick={() => setWaytogoExpanded(false)}
+                          className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white/70 transition-colors hover:border-white/25 hover:bg-white/10 hover:text-white"
+                        >
+                          Show less
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                {isWaytogo && waytogoClip && waytogoHasMore && (
+                  <>
+                    <div
+                      className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-28 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent"
+                      aria-hidden
+                    />
+                    <div className="absolute bottom-3 left-1/2 z-[2] -translate-x-1/2 px-2">
+                      <button
+                        type="button"
+                        onClick={() => setWaytogoExpanded(true)}
+                        className="whitespace-nowrap rounded-lg border border-accent/40 bg-black/60 px-4 py-2 text-xs font-bold uppercase tracking-wider text-accent-100 shadow-lg backdrop-blur-sm transition-colors hover:border-accent/60 hover:bg-accent/20"
+                      >
+                        Show more
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             )
           })}
         </div>
 
         <div
-          className="relative mx-auto mt-20 max-w-4xl rounded-2xl border border-accent/20 bg-white/[0.03] px-6 py-12 shadow-inner backdrop-blur-sm md:px-10"
+          className="relative mx-auto mt-20 w-full max-w-lg rounded-2xl border border-accent/20 bg-white/[0.03] px-4 py-8 shadow-inner backdrop-blur-sm sm:max-w-2xl sm:px-6 sm:py-10 md:max-w-3xl md:px-8 lg:max-w-5xl lg:px-10 lg:py-11 xl:max-w-6xl 2xl:max-w-7xl 2xl:px-12 2xl:py-12"
           data-aos="fade-up"
         >
           <div className="absolute -top-px left-1/2 h-px w-24 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
           <h3 className="mb-2 text-center text-2xl font-extrabold uppercase tracking-tight text-white">
             Skills
           </h3>
-          <p className="mx-auto mb-8 max-w-2xl text-center text-sm text-white/50">
+          <p className="mx-auto mb-8 max-w-2xl px-1 text-center text-sm text-white/50 sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
             Technologies and tools consolidated from the roles above—deduplicated and ordered A–Z.
           </p>
           <div className="flex flex-wrap justify-center gap-2.5 md:gap-3">
