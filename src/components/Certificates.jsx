@@ -177,7 +177,7 @@ const Certificates = () => {
                     )}
                     {cert.date && (
                       <p className="text-sm text-paper-mute">
-                        {t({ en: 'Issued', tr: 'Veriliş' })} <span className="text-brass tabular-nums">{cert.date}</span>
+                        {t({ en: 'Issued', tr: 'Veriliş tarihi' })} <span className="text-brass tabular-nums">{cert.date}</span>
                       </p>
                     )}
                   </div>

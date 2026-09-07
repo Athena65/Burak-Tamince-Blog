@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Isotope from 'isotope-layout'
+import imagesLoaded from 'imagesloaded'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import SectionHeader from './SectionHeader'
@@ -54,14 +56,19 @@ const portfolioItems = [
       { en: 'Real-time conversion', tr: 'Anlık dönüşüm' },
       { en: 'LCD status display', tr: 'LCD durum ekranı' }
     ],
-    hardware: ['Arduino Uno', '4 Push Buttons', '16x2 LCD display', '10k Resistors']
+    hardware: [
+      'Arduino Uno',
+      { en: '4 push buttons', tr: '4 buton' },
+      { en: '16x2 LCD display', tr: '16x2 LCD ekran' },
+      { en: '10k resistors', tr: '10k direnç' }
+    ]
   },
   {
     title: { en: 'E-Commerce Laravel', tr: 'Laravel e-ticaret' },
     category: 'web',
     description: {
       en: 'Feature-rich e-commerce platform with a comprehensive admin panel for efficient management.',
-      tr: 'Kapsamlı bir yönetim paneliyle gelen, özellik açısından zengin bir e-ticaret platformu.'
+      tr: 'Kapsamlı bir yönetim paneli sunan, geniş özellikli bir e-ticaret platformu.'
     },
     image: '/assets/img/portfolio/ecommercelaravel.png',
     githubUrl: 'https://github.com/Athena65/E-Commerce-Laravel',
@@ -127,32 +134,13 @@ const portfolioItems = [
 /** English title — used for analytics payloads so both languages report the same value. */
 const englishTitle = (item) => (typeof item.title === 'string' ? item.title : item.title.en)
 
-/** Last path segment of a GitHub URL, lowercased: the key the live repo data is stored under. */
-const repoKeyOf = (url) => {
-  if (!url) return ''
-  return url.replace(/\/+$/, '').split('/').pop().toLowerCase()
-}
-
-const formatPushed = (iso, lang) => {
-  if (!iso) return ''
-  try {
-    return new Intl.DateTimeFormat(lang === 'tr' ? 'tr-TR' : 'en-GB', {
-      year: 'numeric',
-      month: 'short'
-    }).format(new Date(iso))
-  } catch {
-    return ''
-  }
-}
-
-const PortfolioCard = ({ item, index, repo, onOpenLightbox }) => {
-  const { t, lang } = useLanguage()
+const PortfolioCard = ({ item, index, onOpenLightbox }) => {
+  const { t } = useLanguage()
   const title = t(item.title)
-  const updated = repo ? formatPushed(repo.pushedAt, lang) : ''
 
   return (
-    <article className="h-full">
-      <div className="group relative flex h-full flex-col rounded-md border border-rule bg-ink-2/70 transition-colors duration-300 hover:border-accent/60 hover:bg-ink-2">
+    <div className={`isotope-item ${item.category} p-3 w-full md:w-1/2 lg:w-1/3`}>
+      <article className="group relative flex flex-col rounded-md border border-rule bg-ink-2/70 transition-colors hover:border-rule-strong">
         {/* Card head: image — click to open the preview */}
         <button
           type="button"
@@ -162,11 +150,11 @@ const PortfolioCard = ({ item, index, repo, onOpenLightbox }) => {
         >
           <img
             src={item.image}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            className="h-full w-full object-cover"
             alt={title}
           />
           {/* Hover veil with a zoom cue */}
-          <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/70 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/70 opacity-0 group-hover:opacity-100">
             <span className="inline-flex items-center gap-2 rounded-sm border border-rule-strong bg-ink-2 px-3 py-1.5 text-sm font-medium text-paper">
               <i className="bi bi-zoom-in" aria-hidden="true"></i>
               {t({ en: 'Preview', tr: 'Önizleme' })}
@@ -192,7 +180,7 @@ const PortfolioCard = ({ item, index, repo, onOpenLightbox }) => {
             ))}
           </ul>
 
-          {/* Key features — always visible, so nothing in the row moves */}
+          {/* Key features — always visible, so the masonry never has to reflow */}
           <div className="mt-4">
             <p className="text-sm text-paper-mute">{t({ en: 'Key features', tr: 'Öne çıkanlar' })}</p>
             <ul className="mt-2 space-y-1.5">
@@ -205,32 +193,24 @@ const PortfolioCard = ({ item, index, repo, onOpenLightbox }) => {
             </ul>
           </div>
 
-          {/* Footer: live repo meta (when GitHub answered) plus the actions */}
-          <div className="mt-auto border-t border-rule pt-4">
-            {repo && (
-              <p className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-paper-mute">
-                <span
-                  role="img"
-                  className="inline-flex items-center gap-1.5"
-                  aria-label={t({
-                    en: `${repo.stars} stars on GitHub`,
-                    tr: `GitHub'da ${repo.stars} yıldız`
-                  })}
-                >
-                  <i className="bi bi-star-fill" aria-hidden="true"></i>
-                  <span className="tabular-nums text-brass">{repo.stars}</span>
-                </span>
-                {updated && (
-                  <span className="inline-flex items-center gap-1.5">
-                    {t({ en: 'Updated', tr: 'Güncellendi' })}
-                    <span className="tabular-nums text-brass">{updated}</span>
-                  </span>
-                )}
-              </p>
-            )}
+          {/* Parts list — only the hardware projects carry one */}
+          {item.hardware && (
+            <div className="mt-4">
+              <p className="text-sm text-paper-mute">{t({ en: 'Hardware', tr: 'Donanım' })}</p>
+              <ul className="mt-2 flex flex-wrap gap-1.5">
+                {item.hardware.map((part, i) => (
+                  <li key={i} className="rounded-sm border border-rule bg-ink-3/60 px-2.5 py-1 text-[13px] text-paper-dim">
+                    {t(part)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
+          <div className="mt-auto border-t border-rule pt-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <button
+                type="button"
                 onClick={() => onOpenLightbox(index, englishTitle(item))}
                 className="inline-flex items-center gap-2 text-sm text-paper-dim transition-colors hover:text-paper"
               >
@@ -254,66 +234,74 @@ const PortfolioCard = ({ item, index, repo, onOpenLightbox }) => {
             </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </div>
   )
 }
 
+/** Isotope's filter syntax: everything, or the category class on the item. */
+const isotopeFilter = (key) => (key === '*' ? '*' : `.${key}`)
+
 const Portfolio = () => {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
+  const isotopeRef = useRef(null)
+  const isotopeInstanceRef = useRef(null)
+  const filterRef = useRef('*')
   const [filterKey, setFilterKey] = useState('*')
-  const [repos, setRepos] = useState({})
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
 
-  // Live repo data straight from the public GitHub API — no token, no backend,
-  // the site is a static GitHub Pages build. GitHub allows only 60
-  // unauthenticated requests per hour per IP, so a failed or rate-limited
-  // request is expected: it must degrade silently and never surface an error
-  // to the visitor or break a card.
+  const refreshIsotope = () => {
+    if (isotopeInstanceRef.current) {
+      isotopeInstanceRef.current.layout()
+    }
+  }
+
+  // Masonry grid: the images decide the item heights, so wait for imagesLoaded
+  // before Isotope measures. StrictMode mounts twice and imagesLoaded is async,
+  // hence the cancelled guard — otherwise two instances share one node.
   useEffect(() => {
-    const controller = new AbortController()
+    const el = isotopeRef.current
+    if (!el) return
 
-    const load = async () => {
-      try {
-        const res = await fetch(
-          'https://api.github.com/users/Athena65/repos?per_page=100&sort=pushed',
-          { signal: controller.signal }
-        )
-        if (!res.ok) return
+    let cancelled = false
 
-        const data = await res.json()
-        if (!Array.isArray(data)) return
+    imagesLoaded(el, () => {
+      if (cancelled) return
+      isotopeInstanceRef.current = new Isotope(el, {
+        itemSelector: '.isotope-item',
+        layoutMode: 'masonry',
+        filter: isotopeFilter(filterRef.current)
+      })
+    })
 
-        const byName = new Map(data.map((repo) => [String(repo.name).toLowerCase(), repo]))
-        const next = {}
-        portfolioItems.forEach((item) => {
-          const key = repoKeyOf(item.githubUrl)
-          const repo = key && byName.get(key)
-          if (!repo) return
-          next[key] = {
-            stars: repo.stargazers_count ?? 0,
-            pushedAt: repo.pushed_at,
-            htmlUrl: repo.html_url
-          }
-        })
-        setRepos(next)
-      } catch (err) {
-        if (err?.name === 'AbortError') return
-        // Offline, blocked or rate-limited: the cards simply render without the meta line.
+    return () => {
+      cancelled = true
+      if (isotopeInstanceRef.current) {
+        isotopeInstanceRef.current.destroy()
+        isotopeInstanceRef.current = null
       }
     }
-
-    load()
-
-    return () => controller.abort()
   }, [])
 
-  const visible = filterKey === '*'
-    ? portfolioItems
-    : portfolioItems.filter((i) => i.category === filterKey)
+  // Filter through Isotope, not through React: every card stays mounted so the
+  // lightbox indexes keep matching. The ref carries the choice over to the
+  // constructor above when a tab is clicked before the images finish loading.
+  useEffect(() => {
+    filterRef.current = filterKey
+    if (isotopeInstanceRef.current) {
+      isotopeInstanceRef.current.arrange({ filter: isotopeFilter(filterKey) })
+    }
+  }, [filterKey])
 
-  const lightboxSlides = visible.map((item) => ({
+  // English and Turkish copy run to different lengths, and the language is
+  // detected after mount — re-run layout() a few times while the text settles.
+  useEffect(() => {
+    const timers = [50, 150, 300, 550].map((ms) => setTimeout(refreshIsotope, ms))
+    return () => timers.forEach(clearTimeout)
+  }, [lang])
+
+  const lightboxSlides = portfolioItems.map((item) => ({
     src: item.image,
     title: t(item.title),
     description: t(item.description)
@@ -327,7 +315,7 @@ const Portfolio = () => {
 
   const handleFilter = (key) => {
     setFilterKey(key)
-    trackEvent('filter_used', { section: 'projects', value: key })
+    trackEvent('filter_used', { section: 'projects', value: key === '*' ? 'all' : key })
   }
 
   const categories = [
@@ -336,6 +324,7 @@ const Portfolio = () => {
     { label: { en: 'Mobile', tr: 'Mobil' }, key: 'mobile' },
     { label: { en: 'Arduino', tr: 'Arduino' }, key: 'arduino' },
     { label: { en: 'AI', tr: 'Yapay zekâ' }, key: 'ai' },
+    { label: { en: 'Software', tr: 'Yazılım' }, key: 'software' },
   ]
 
   const filterTabs = (
@@ -343,6 +332,7 @@ const Portfolio = () => {
       {categories.map((cat) => (
         <button
           key={cat.key}
+          type="button"
           onClick={() => handleFilter(cat.key)}
           aria-pressed={filterKey === cat.key}
           className={`border-b-2 pb-2 text-sm font-medium transition-colors ${filterKey === cat.key
@@ -362,24 +352,24 @@ const Portfolio = () => {
         <SectionHeader
           title={t({ en: 'Projects', tr: 'Projeler' })}
           deck={t({
-            en: 'Seven repositories on GitHub, from an Arduino binary converter to a Laravel storefront and a YOLOv8 product matcher.',
-            tr: "GitHub'da yedi depo: Arduino ile ikili sayı çeviricisinden Laravel mağazasına ve YOLOv8 ürün eşleştiricisine uzanıyor."
+            en: `${portfolioItems.length} repositories on GitHub, from an Arduino binary converter to a Laravel storefront and a YOLOv8 product matcher.`,
+            tr: `GitHub'da ${portfolioItems.length} depo: Arduino ile ikili sayı çeviricisinden Laravel mağazasına ve YOLOv8 ürün eşleştiricisine uzanıyor.`
           })}
           aside={filterTabs}
         />
 
-        {/* Plain CSS grid: equal-height cards, no masonry, so nothing reflows */}
+        {/* Isotope masonry container — item widths live on the cards themselves */}
         <div
-          className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          ref={isotopeRef}
+          className="isotope-container flex flex-wrap"
           data-aos="fade-up"
           data-aos-delay="200"
         >
-          {visible.map((item, index) => (
+          {portfolioItems.map((item, index) => (
             <PortfolioCard
               key={item.githubUrl}
               item={item}
               index={index}
-              repo={repos[repoKeyOf(item.githubUrl)]}
               onOpenLightbox={handleOpenLightbox}
             />
           ))}

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7TEN4EVFWS"></script>
     <script>
@@ -9,8 +12,6 @@
       gtag('js', new Date());
       gtag('config', 'G-7TEN4EVFWS');
     </script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/jpeg" href="/assets/img/bt-favicon.jpg" />
 
     <title>Burak Tamince | Full-Stack Developer &amp; Computer Engineer</title>
@@ -31,11 +32,26 @@
     <link rel="alternate" hreflang="en" href="https://buraktamince.net.tr/" />
     <link rel="alternate" hreflang="tr" href="https://buraktamince.net.tr/?lang=tr" />
     <link rel="alternate" hreflang="x-default" href="https://buraktamince.net.tr/" />
+    <script>
+      /* ?lang=tr is a real URL (LanguageContext reads it) and the tr hreflang alternate
+         points at it. Without this, that alternate canonicalises back to "/" and search
+         engines drop the tr/x-default cluster. Static site: rewriting the rendered
+         canonical is the only lever available. */
+      try {
+        if ((new URLSearchParams(window.location.search).get('lang') || '').toLowerCase() === 'tr') {
+          var canonical = document.querySelector('link[rel="canonical"]');
+          if (canonical) canonical.setAttribute('href', 'https://buraktamince.net.tr/?lang=tr');
+        }
+      } catch (e) {
+        /* malformed query string; keep the static canonical */
+      }
+    </script>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Burak Tamince" />
     <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="tr_TR" />
     <meta property="og:title" content="Burak Tamince | Full-Stack Developer &amp; Computer Engineer" />
     <meta
       property="og:description"

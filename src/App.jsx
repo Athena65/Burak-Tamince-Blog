@@ -12,10 +12,34 @@ import Footer from './components/Footer'
 import ScrollTop from './components/ScrollTop'
 import MouseTrail from './components/MouseTrail'
 import AnalyticsDebugPanel from './components/AnalyticsDebugPanel'
+import { useLanguage } from './i18n/LanguageContext'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 function App() {
+  const { t, lang } = useLanguage()
+
+  // The tab title and the description are visitor-facing strings too. index.html
+  // keeps the English copy as the crawler / first-paint default; this follows the
+  // language switch so a Turkish reader does not sit under an English tab title.
+  useEffect(() => {
+    document.title = t({
+      en: 'Burak Tamince | Full-Stack Developer & Computer Engineer',
+      tr: 'Burak Tamince | Full-Stack Geliştirici ve Bilgisayar Mühendisi',
+    })
+
+    const description = document.querySelector('meta[name="description"]')
+    if (description) {
+      description.setAttribute(
+        'content',
+        t({
+          en: 'Portfolio of Burak Tamince — Computer Engineer and full-stack developer in Istanbul. ASP.NET Core, React, AWS, PHP, Moodle, AI (Bedrock), and HR software. Experience at Rapidsol and Waytogo; projects, certificates, and resume.',
+          tr: "Burak Tamince'nin portföyü — İstanbul'da bilgisayar mühendisi ve full-stack geliştirici. ASP.NET Core, React, AWS, PHP, Moodle, yapay zekâ (Bedrock) ve İK yazılımları. Rapidsol ve Waytogo deneyimi; projeler, sertifikalar ve özgeçmiş.",
+        }),
+      )
+    }
+  }, [lang, t])
+
   useEffect(() => {
     AOS.init({
       // One quiet reveal per block: a short fade, no slide.

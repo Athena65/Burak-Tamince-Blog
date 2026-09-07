@@ -7,7 +7,10 @@ import { trackEvent, trackOutbound } from '../utils/analytics'
  *  Only the label a visitor reads goes through t(). */
 const categoryLabels = {
   All: { en: 'All', tr: 'Tümü' },
+  Magic: { en: 'Magic', tr: 'Sihir' },
+  Gaming: { en: 'Gaming', tr: 'Oyun' },
   Sports: { en: 'Sports', tr: 'Spor' },
+  Comedy: { en: 'Comedy', tr: 'Komedi' },
 }
 
 const categoryLabel = (category) => categoryLabels[category] || category
@@ -88,7 +91,7 @@ const Videos = () => {
       category: 'Sports',
       description: {
         en: 'High-quality 1080p footage of off-piste snowboarding through fresh powder.',
-        tr: 'Taze toz karda pist dışı snowboard; 1080p yüksek kaliteli görüntü.',
+        tr: 'Taze toz karda pist dışı snowboard, 1080p kalitesinde çekim.',
       },
       youtubeId: '6u62l-ernA8',
     },
@@ -136,8 +139,8 @@ const Videos = () => {
         <SectionHeader
           title={t({ en: 'Videos', tr: 'Videolar' })}
           deck={t({
-            en: 'Snowboarding clips, from a first run in the valley to off-piste powder.',
-            tr: 'Snowboard klipleri: vadideki ilk inişten pist dışı toz kara.',
+            en: 'Gaming benchmarks, snowboarding runs, a magic show and a comedy clip.',
+            tr: 'Oyun performans testleri, snowboard inişleri, bir sihir gösterisi ve bir komedi klibi.',
           })}
           aside={filterTabs}
         />

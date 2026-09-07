@@ -22,7 +22,7 @@ const Resume = () => {
         <div className="rounded-md border border-rule bg-ink-2/70 p-6 md:p-8" data-aos="fade-up" data-aos-delay="100">
           <div className="max-w-measure">
             <h3 className="font-display stretch-normal font-semibold text-lg md:text-xl text-paper tracking-tight">
-              {t({ en: 'Burak Tamince, CV', tr: 'Burak Tamince, CV' })}
+              Burak Tamince, CV
             </h3>
             <p className="mt-2 text-paper-dim">
               {t({

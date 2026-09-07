@@ -5,7 +5,7 @@ import { useLanguage } from '../i18n/LanguageContext'
 const About = () => {
   const { t } = useLanguage()
   const [age, setAge] = useState('')
-  const [experience, setExperience] = useState('')
+  const [experience, setExperience] = useState(null)
   const [website, setWebsite] = useState('')
 
   useEffect(() => {
@@ -32,11 +32,7 @@ const About = () => {
         years--
         months += 12
       }
-      let expText = `+${years} year${years !== 1 ? 's' : ''}`
-      if (months > 0) {
-        expText += ` ${months} month${months !== 1 ? 's' : ''}`
-      }
-      setExperience(expText)
+      setExperience({ years, months })
     }
 
     // Set website
@@ -59,14 +55,20 @@ const About = () => {
     }
   }, [])
 
+  // Formatted at render, not in the effect: the effect runs once, the label must follow the language.
+  const experienceLabel = experience
+    ? `+${experience.years} ${t({ en: experience.years !== 1 ? 'years' : 'year', tr: 'yıl' })}` +
+      (experience.months > 0 ? ` ${experience.months} ${t({ en: experience.months !== 1 ? 'months' : 'month', tr: 'ay' })}` : '')
+    : ''
+
   return (
     <section id="about" className="about section relative border-t border-rule py-20 md:py-28">
       <div className="container">
         <SectionHeader
           title={t({ en: 'About', tr: 'Hakkımda' })}
           deck={t({
-            en: 'Computer engineer from Istanbul Gedik University: first in the Computer Engineering department, first in the Faculty of Engineering and third across the university, with a 3.88 GPA. I build full-stack products, ASP.NET Core and React on AWS at Rapidsol, and a PHP and Moodle coaching platform with AI integrations at Waytogo.',
-            tr: "İstanbul Gedik Üniversitesi mezunu bilgisayar mühendisiyim: 3,88 ortalamayla Bilgisayar Mühendisliği bölüm birincisi, Mühendislik Fakültesi birincisi ve üniversite üçüncüsüyüm. Rapidsol'da AWS üzerinde ASP.NET Core ve React ile full-stack ürünler, Waytogo'da ise yapay zeka entegrasyonlu PHP ve Moodle tabanlı bir koçluk platformu geliştiriyorum.",
+            en: 'Computer engineer from Istanbul Gedik University. I build full-stack products: ASP.NET Core and React on AWS at Rapidsol, and a PHP and Moodle coaching platform with AI integrations at Waytogo.',
+            tr: "İstanbul Gedik Üniversitesi mezunu bilgisayar mühendisiyim. Rapidsol'da AWS üzerinde ASP.NET Core ve React ile full-stack ürünler, Waytogo'da ise yapay zeka entegrasyonlu PHP ve Moodle tabanlı bir koçluk platformu geliştiriyorum.",
           })}
         />
 
@@ -102,8 +104,8 @@ const About = () => {
             {/* Facts as a definition list; Experience and Age are computed values, so they read in brass */}
             <dl className="mt-8 grid gap-x-10 sm:grid-cols-2">
               {[
-                { id: 'experience', label: { en: 'Experience', tr: 'Deneyim' }, value: experience, isData: true },
-                { id: 'degree', label: { en: 'Degree', tr: 'Derece' }, value: { en: "Bachelor's degree", tr: 'Lisans' } },
+                { id: 'experience', label: { en: 'Experience', tr: 'Deneyim' }, value: experienceLabel, isData: true },
+                { id: 'degree', label: { en: 'Degree', tr: 'Eğitim' }, value: { en: "Bachelor's degree", tr: 'Lisans' } },
                 { id: 'city', label: { en: 'City', tr: 'Şehir' }, value: { en: 'Istanbul, Türkiye', tr: 'İstanbul, Türkiye' } },
                 { id: 'age', label: { en: 'Age', tr: 'Yaş' }, value: age, isData: true },
                 { id: 'website', label: { en: 'Website', tr: 'Web sitesi' }, value: website },

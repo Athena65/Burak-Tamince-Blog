@@ -78,6 +78,11 @@ const Header = () => {
           id="navmenu"
           className="navmenu w-full overflow-visible px-5 pr-16 sm:px-8 sm:pr-20 xl:w-[140px] xl:overflow-visible xl:px-0"
         >
+          {/* Language switch sits at the head of the menu, sized like a rail plate */}
+          <div className="mb-4 flex xl:mb-3 xl:block">
+            <LanguageToggle />
+          </div>
+
           <ul className="m-0 flex flex-wrap items-center gap-x-7 gap-y-1 overflow-visible p-0 xl:block xl:gap-0 xl:overflow-visible">
             {navItems.map((item) => {
               const isActive = activeSection === item.id
@@ -110,17 +115,7 @@ const Header = () => {
               )
             })}
           </ul>
-
-          {/* Language switch, desktop: the last item of the rail, sized to fit the 140px column */}
-          <div className="hidden xl:flex">
-            <LanguageToggle className="mt-4" />
-          </div>
         </nav>
-
-        {/* Language switch, mobile: centred at the foot of the open panel */}
-        <div className="flex justify-center px-5 sm:px-8 xl:hidden">
-          <LanguageToggle className="mt-6" />
-        </div>
       </header>
       {isMenuOpen && (
         <div
