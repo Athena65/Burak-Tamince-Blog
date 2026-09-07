@@ -36,6 +36,11 @@
 
       body {
         margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: clamp(2rem, 8vh, 5rem) clamp(1.25rem, 6vw, 4rem);
         background-color: var(--ink);
         color: var(--paper);
         font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
@@ -45,8 +50,9 @@
       }
 
       main {
-        max-width: 62ch;
-        padding: clamp(3rem, 12vh, 8rem) clamp(1.25rem, 6vw, 5rem);
+        width: 100%;
+        max-width: 34rem;
+        text-align: center;
       }
 
       .code {
@@ -54,7 +60,7 @@
         font-family: Archivo, 'IBM Plex Sans', system-ui, sans-serif;
         font-stretch: 112%;
         font-weight: 700;
-        font-size: clamp(4.5rem, 18vw, 9rem);
+        font-size: clamp(4rem, 22vw, 9rem);
         line-height: 1;
         letter-spacing: -0.02em;
         font-variant-numeric: tabular-nums;
@@ -63,18 +69,28 @@
 
       hr {
         height: 0;
-        margin: clamp(2rem, 6vh, 3.5rem) 0;
+        width: 4rem;
+        margin: clamp(1.5rem, 5vh, 2.5rem) auto;
         border: 0;
         border-top: 1px solid var(--rule);
       }
 
-      .block + .block {
-        margin-top: clamp(2rem, 5vh, 3rem);
+      .blocks {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: clamp(1.5rem, 5vw, 3rem);
+      }
+
+      .block {
+        flex: 1 1 12rem;
+        min-width: 0;
       }
 
       .block p {
-        margin: 0 0 0.75rem;
+        margin: 0 0 0.5rem;
         color: var(--paper-dim);
+        text-wrap: balance;
       }
 
       a {
@@ -99,14 +115,16 @@
 
       <hr />
 
-      <div class="block" lang="en">
-        <p>This page does not exist.</p>
-        <a href="/">Go to the homepage</a>
-      </div>
+      <div class="blocks">
+        <div class="block" lang="en">
+          <p>This page does not exist.</p>
+          <a href="/">Go to the homepage</a>
+        </div>
 
-      <div class="block" lang="tr">
-        <p>Bu sayfa bulunamadı.</p>
-        <a href="/">Ana sayfaya dön</a>
+        <div class="block" lang="tr">
+          <p>Bu sayfa bulunamadı.</p>
+          <a href="/">Ana sayfaya dön</a>
+        </div>
       </div>
     </main>
   </body>

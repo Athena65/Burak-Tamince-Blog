@@ -1,0 +1,327 @@
+# Update GitHub stats
+#
+# Refreshes public/data/github-stats.json, the small file the GitHubActivity
+# section on the site reads at runtime. It runs here, in CI, so that no API
+# token is ever needed in the browser.
+#
+# TOKEN
+#   The job tries the repository's built-in token (github.token) first, so in
+#   most cases the site owner needs to set up nothing at all. The built-in token
+#   can read public repository data but usually cannot read a user's
+#   contribution calendar. If the heatmap comes back empty (the run prints a
+#   clear warning saying so), create a CLASSIC personal access token with ONLY
+#   the read:user scope and add it as the repository secret GH_STATS_TOKEN:
+#   Settings -> Secrets and variables -> Actions -> New repository secret.
+#   No other scope is needed. Never give it repo or write access.
+#
+#   The token lives only in GitHub Actions. It is not written into the JSON, not
+#   bundled by Vite and never reaches the browser. The site is static and stays
+#   static: it only fetches the finished JSON file.
+#
+# PRIVACY
+#   The generated JSON deliberately contains no repository names, no
+#   organisation names and no pull request titles - only aggregate numbers and a
+#   per-day contribution count. Private and forked repositories are excluded
+#   from every total.
+#
+# DEPLOYMENT NOTE
+#   A push made with the built-in github.token does not trigger other workflows,
+#   so the commit made here does not by itself start deploy.yml. The refreshed
+#   numbers go live with the next regular push to main. deploy.yml is left
+#   untouched on purpose.
+
+name: Update GitHub stats
+
+on:
+  schedule:
+    # Daily at 03:17 UTC. An odd minute keeps it off GitHub's busiest slots.
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/github-stats.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: github-stats
+  cancel-in-progress: false
+
+jobs:
+  stats:
+    name: Refresh public GitHub stats
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Collect public GitHub stats
+        env:
+          # Built-in token first; the optional PAT wins when it exists.
+          GH_TOKEN: ${{ secrets.GH_STATS_TOKEN || github.token }}
+        run: |
+          cat > "$RUNNER_TEMP/gh-stats.mjs" <<'GHSTATS_EOF'
+          // Collects public GitHub numbers for the site and writes public/data/github-stats.json.
+          // Node 20 built-ins only (global fetch, node:fs, node:path) - no npm install.
+          //
+          // PRIVACY: the output holds aggregate numbers only. No repository names, no
+          // organisation names, no pull request titles, nothing private ever lands in it.
+          import { mkdir, readFile, writeFile } from 'node:fs/promises'
+          import { dirname, resolve } from 'node:path'
+
+          const LOGIN = 'Athena65'
+          const OUT = resolve(process.cwd(), 'public', 'data', 'github-stats.json')
+          const MAX_LANGUAGES = 8
+
+          const token = process.env.GH_TOKEN
+
+          const PAT_HINT = [
+            'The contribution calendar needs a token that can read user data.',
+            'The repository built-in token (github.token) usually cannot, so:',
+            '  1. Create a CLASSIC personal access token with ONLY the read:user scope.',
+            '  2. Add it to this repository as the secret GH_STATS_TOKEN',
+            '     (Settings -> Secrets and variables -> Actions -> New repository secret).',
+            'The token stays inside GitHub Actions. It is never written into the JSON and',
+            'never reaches the browser bundle. Everything else in the file still updates.',
+          ].join('\n')
+
+          const warn = (message) => {
+            console.log('')
+            console.log(message)
+            console.log(PAT_HINT)
+            console.log('')
+            console.log(
+              '::warning title=GitHub stats::' +
+                message +
+                ' Add a classic PAT with only the read:user scope as the repository secret GH_STATS_TOKEN to enable the contribution calendar.',
+            )
+          }
+
+          const headers = {
+            accept: 'application/vnd.github+json',
+            'user-agent': 'btblog-github-stats',
+            'x-github-api-version': '2022-11-28',
+          }
+          if (token) headers.authorization = 'bearer ' + token
+
+          const LEVELS = {
+            NONE: 0,
+            FIRST_QUARTILE: 1,
+            SECOND_QUARTILE: 2,
+            THIRD_QUARTILE: 3,
+            FOURTH_QUARTILE: 4,
+          }
+
+          const getJson = async (url) => {
+            const res = await fetch(url, { headers })
+            if (!res.ok) throw new Error('GET ' + url.replace(/\?.*$/, '') + ' -> HTTP ' + res.status)
+            return res.json()
+          }
+
+          /** Contribution calendar via GraphQL. Returns null when there is no token. */
+          const fetchContributions = async () => {
+            if (!token) return null
+
+            const query =
+              'query($login:String!){ user(login:$login){ contributionsCollection { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount contributionLevel } } } } } }'
+
+            const res = await fetch('https://api.github.com/graphql', {
+              method: 'POST',
+              headers: { ...headers, 'content-type': 'application/json' },
+              body: JSON.stringify({ query, variables: { login: LOGIN } }),
+            })
+
+            if (!res.ok) throw new Error('GraphQL request failed with HTTP ' + res.status + '.')
+
+            const body = await res.json()
+            if (Array.isArray(body.errors) && body.errors.length > 0) {
+              throw new Error('GraphQL returned errors: ' + body.errors.map((e) => e.message).join('; '))
+            }
+
+            const calendar = body?.data?.user?.contributionsCollection?.contributionCalendar
+            if (!calendar) throw new Error('GraphQL returned no user, so no contribution calendar.')
+
+            const days = []
+            for (const week of calendar.weeks || []) {
+              for (const day of week.contributionDays || []) {
+                days.push({
+                  date: day.date,
+                  count: day.contributionCount || 0,
+                  level: LEVELS[day.contributionLevel] ?? 0,
+                })
+              }
+            }
+
+            return { total: calendar.totalContributions || 0, days }
+          }
+
+          /** Public repo count, stars, forks and the language histogram via REST. */
+          const fetchRepoStats = async () => {
+            const user = await getJson('https://api.github.com/users/' + LOGIN)
+
+            const all = []
+            for (let page = 1; page <= 5; page += 1) {
+              const chunk = await getJson(
+                'https://api.github.com/users/' + LOGIN + '/repos?per_page=100&page=' + page,
+              )
+              if (!Array.isArray(chunk) || chunk.length === 0) break
+              all.push(...chunk)
+              if (chunk.length < 100) break
+            }
+
+            // Own public work only: no forks, nothing private.
+            const own = all.filter((repo) => repo.fork === false && repo.private === false)
+
+            const histogram = new Map()
+            let stars = 0
+            let forks = 0
+            for (const repo of own) {
+              stars += repo.stargazers_count || 0
+              forks += repo.forks_count || 0
+              if (repo.language) histogram.set(repo.language, (histogram.get(repo.language) || 0) + 1)
+            }
+
+            const languages = [...histogram.entries()]
+              .map(([name, count]) => ({ name, count }))
+              // Count descending; name ascending only so the file stays stable between runs.
+              .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+              .slice(0, MAX_LANGUAGES)
+
+            return {
+              repos: {
+                public: typeof user.public_repos === 'number' ? user.public_repos : own.length,
+                stars,
+                forks,
+              },
+              languages,
+            }
+          }
+
+          /** Key-order independent comparison, so a reformatted file is not a change. */
+          const stable = (value) =>
+            JSON.stringify(value, (key, val) =>
+              val && typeof val === 'object' && !Array.isArray(val)
+                ? Object.fromEntries(
+                    Object.keys(val)
+                      .sort()
+                      .map((k) => [k, val[k]]),
+                  )
+                : val,
+            )
+
+          let previous = null
+          try {
+            previous = JSON.parse(await readFile(OUT, 'utf8'))
+          } catch {
+            previous = null // first run, or the file is not readable yet
+          }
+
+          // Contribution calendar. A failure here must never fail the job: keep whatever
+          // was committed before and carry on without a fresh calendar.
+          let contributions = previous?.contributions ?? { total: 0, days: [] }
+          let calendarOk = false
+          try {
+            const fresh = await fetchContributions()
+            if (fresh) {
+              contributions = fresh
+              calendarOk = true
+            } else {
+              warn('No token was available, so the contribution calendar was skipped.')
+            }
+          } catch (error) {
+            warn('Could not read the contribution calendar with the current token (' + error.message + ')')
+          }
+
+          // Public repository aggregates. Same rule: keep the committed values on failure
+          // rather than overwriting good data with zeros.
+          let repos = previous?.repos ?? null
+          let languages = previous?.languages ?? null
+          let reposOk = false
+          try {
+            const fresh = await fetchRepoStats()
+            repos = fresh.repos
+            languages = fresh.languages
+            reposOk = true
+          } catch (error) {
+            console.log(
+              '::warning title=GitHub stats::Public repository stats could not be refreshed (' +
+                error.message +
+                '). Keeping the values already committed.',
+            )
+          }
+
+          if (!calendarOk && !reposOk) {
+            console.log('Nothing could be refreshed this run. Leaving the committed file untouched.')
+            process.exit(0)
+          }
+
+          const core = {
+            user: LOGIN,
+            contributions: {
+              total: contributions?.total ?? 0,
+              days: Array.isArray(contributions?.days) ? contributions.days : [],
+            },
+            repos: repos ?? { public: 0, stars: 0, forks: 0 },
+            languages: Array.isArray(languages) ? languages : [],
+          }
+
+          const previousCore = previous
+            ? {
+                user: previous.user,
+                contributions: previous.contributions,
+                repos: previous.repos,
+                languages: previous.languages,
+              }
+            : null
+
+          // Only generatedAt would differ: leave the file alone so the daily run does not
+          // produce an empty commit.
+          if (previousCore && stable(previousCore) === stable(core)) {
+            console.log('GitHub stats are unchanged. File left as is.')
+            process.exit(0)
+          }
+
+          const output = { generatedAt: new Date().toISOString(), ...core }
+
+          await mkdir(dirname(OUT), { recursive: true })
+          await writeFile(OUT, JSON.stringify(output, null, 2) + '\n', 'utf8')
+
+          console.log('Wrote ' + OUT)
+          console.log(
+            'public repos ' +
+              core.repos.public +
+              ', stars ' +
+              core.repos.stars +
+              ', forks ' +
+              core.repos.forks +
+              ', languages ' +
+              core.languages.length +
+              ', contribution days ' +
+              core.contributions.days.length +
+              ' (total ' +
+              core.contributions.total +
+              ')',
+          )
+          GHSTATS_EOF
+
+          node "$RUNNER_TEMP/gh-stats.mjs"
+
+      - name: Commit the refreshed file if it changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/github-stats.json
+          if git diff --staged --quiet; then
+            echo "public/data/github-stats.json is unchanged - nothing to commit."
+          else
+            git commit -m "chore: refresh GitHub stats"
+            git push
+          fi

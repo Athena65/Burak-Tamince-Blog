@@ -54,6 +54,15 @@ body::before {
   opacity: 0.55;
 }
 
+/* A 16:9 frame cropped to cover a tall phone screen leaves only a narrow middle
+   slice, which cuts the rider out. Portrait viewports get a 3:4 crop instead. */
+@media (max-aspect-ratio: 1/1) {
+  body::before {
+    background-image: url('/assets/img/site-bg-portrait.webp');
+    background-position: center 42%;
+  }
+}
+
 /* Layer 2: one quiet light source top-left, plus a wash that keeps text legible
    over whatever part of the photo sits behind it. */
 body::after {
