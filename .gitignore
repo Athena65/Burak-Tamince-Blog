@@ -8,3 +8,7 @@ dist-ssr
 *.log
 .env
 .env.local
+# Playwright
+test-results
+playwright-report
+.playwright

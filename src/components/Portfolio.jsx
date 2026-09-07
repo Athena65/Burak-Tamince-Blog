@@ -1,6 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import Isotope from 'isotope-layout'
-import imagesLoaded from 'imagesloaded'
+import { useEffect, useState } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import SectionHeader from './SectionHeader'
@@ -134,172 +132,200 @@ const portfolioItems = [
 /** English title — used for analytics payloads so both languages report the same value. */
 const englishTitle = (item) => (typeof item.title === 'string' ? item.title : item.title.en)
 
-const PortfolioCard = ({ item, index, onOpenLightbox }) => {
-  const { t } = useLanguage()
+/** Last path segment of a GitHub URL, lowercased — the key the live repo stats are stored under. */
+const repoKeyFromUrl = (url) => {
+  if (typeof url !== 'string') return ''
+  const segments = url.split('/').filter(Boolean)
+  return segments.length ? segments[segments.length - 1].toLowerCase() : ''
+}
+
+/** "Sep 2025" / "Eyl 2025". Returns null for a missing or unparsable timestamp. */
+const formatPushedMonth = (pushedAt, lang) => {
+  if (!pushedAt) return null
+  try {
+    const date = new Date(pushedAt)
+    if (Number.isNaN(date.getTime())) return null
+    return new Intl.DateTimeFormat(lang === 'tr' ? 'tr-TR' : 'en-GB', {
+      year: 'numeric',
+      month: 'short'
+    }).format(date)
+  } catch {
+    return null
+  }
+}
+
+const PortfolioCard = ({ item, index, stats, onOpenLightbox }) => {
+  const { t, lang } = useLanguage()
   const title = t(item.title)
+  const pushedMonth = stats ? formatPushedMonth(stats.pushedAt, lang) : null
 
   return (
-    <div className={`isotope-item ${item.category} p-3 w-full md:w-1/2 lg:w-1/3`}>
-      <article className="group relative flex flex-col rounded-md border border-rule bg-ink-2/70 transition-colors hover:border-rule-strong">
-        {/* Card head: image — click to open the preview */}
-        <button
-          type="button"
-          onClick={() => onOpenLightbox(index, englishTitle(item))}
-          aria-label={t({ en: `Preview ${title}`, tr: `${title} önizlemesi` })}
-          className="relative block aspect-video w-full overflow-hidden rounded-t-md"
-        >
-          <img
-            src={item.image}
-            className="h-full w-full object-cover"
-            alt={title}
-          />
-          {/* Hover veil with a zoom cue */}
-          <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/70 opacity-0 group-hover:opacity-100">
-            <span className="inline-flex items-center gap-2 rounded-sm border border-rule-strong bg-ink-2 px-3 py-1.5 text-sm font-medium text-paper">
-              <i className="bi bi-zoom-in" aria-hidden="true"></i>
-              {t({ en: 'Preview', tr: 'Önizleme' })}
-            </span>
+    <article className="group relative flex h-full flex-col rounded-md border border-rule bg-ink-2/70 transition-colors hover:border-rule-strong">
+      {/* Card head: image — click to open the preview */}
+      <button
+        type="button"
+        onClick={() => onOpenLightbox(index, englishTitle(item))}
+        aria-label={t({ en: `Preview ${title}`, tr: `${title} önizlemesi` })}
+        className="relative block aspect-video w-full overflow-hidden rounded-t-md"
+      >
+        <img
+          src={item.image}
+          className="h-full w-full object-cover"
+          alt={title}
+        />
+        {/* Hover veil with a zoom cue */}
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/70 opacity-0 group-hover:opacity-100">
+          <span className="inline-flex items-center gap-2 rounded-sm border border-rule-strong bg-ink-2 px-3 py-1.5 text-sm font-medium text-paper">
+            <i className="bi bi-zoom-in" aria-hidden="true"></i>
+            {t({ en: 'Preview', tr: 'Önizleme' })}
           </span>
-        </button>
+        </span>
+      </button>
 
-        {/* Card body */}
-        <div className="flex flex-1 flex-col p-5">
-          <h3 className="font-display stretch-normal text-lg font-semibold tracking-tight text-paper md:text-xl">
-            {title}
-          </h3>
-          <p className="mt-2 text-sm leading-relaxed text-paper-dim">
-            {t(item.description)}
-          </p>
+      {/* Card body */}
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="font-display stretch-normal text-lg font-semibold tracking-tight text-paper md:text-xl">
+          {title}
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-paper-dim">
+          {t(item.description)}
+        </p>
 
-          {/* Tech tags */}
-          <ul className="mt-4 flex flex-wrap gap-1.5">
-            {item.tech.map((tag, i) => (
-              <li key={i} className="rounded-sm border border-rule bg-ink-3/60 px-2.5 py-1 text-[13px] text-paper-dim">
-                {tag}
+        {/* Tech tags */}
+        <ul className="mt-4 flex flex-wrap gap-1.5">
+          {item.tech.map((tag, i) => (
+            <li key={i} className="rounded-sm border border-rule bg-ink-3/60 px-2.5 py-1 text-[13px] text-paper-dim">
+              {tag}
+            </li>
+          ))}
+        </ul>
+
+        {/* Key features — always visible, never behind a toggle */}
+        <div className="mt-4">
+          <p className="text-sm text-paper-mute">{t({ en: 'Key features', tr: 'Öne çıkanlar' })}</p>
+          <ul className="mt-2 space-y-1.5">
+            {item.features.map((f, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-paper-dim">
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+                {t(f)}
               </li>
             ))}
           </ul>
+        </div>
 
-          {/* Key features — always visible, so the masonry never has to reflow */}
+        {/* Parts list — only the hardware projects carry one */}
+        {item.hardware && (
           <div className="mt-4">
-            <p className="text-sm text-paper-mute">{t({ en: 'Key features', tr: 'Öne çıkanlar' })}</p>
-            <ul className="mt-2 space-y-1.5">
-              {item.features.map((f, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-paper-dim">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
-                  {t(f)}
+            <p className="text-sm text-paper-mute">{t({ en: 'Hardware', tr: 'Donanım' })}</p>
+            <ul className="mt-2 flex flex-wrap gap-1.5">
+              {item.hardware.map((part, i) => (
+                <li key={i} className="rounded-sm border border-rule bg-ink-3/60 px-2.5 py-1 text-[13px] text-paper-dim">
+                  {t(part)}
                 </li>
               ))}
             </ul>
           </div>
+        )}
 
-          {/* Parts list — only the hardware projects carry one */}
-          {item.hardware && (
-            <div className="mt-4">
-              <p className="text-sm text-paper-mute">{t({ en: 'Hardware', tr: 'Donanım' })}</p>
-              <ul className="mt-2 flex flex-wrap gap-1.5">
-                {item.hardware.map((part, i) => (
-                  <li key={i} className="rounded-sm border border-rule bg-ink-3/60 px-2.5 py-1 text-[13px] text-paper-dim">
-                    {t(part)}
-                  </li>
-                ))}
-              </ul>
+        <div className="mt-auto border-t border-rule pt-4">
+          {/* Live GitHub figures — rendered only when the public API answered.
+              No data (rate limit, offline, repo renamed) simply shows nothing. */}
+          {stats && (
+            <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-paper-mute">
+              <span className="inline-flex items-center gap-1.5">
+                <i className="bi bi-star-fill" aria-hidden="true"></i>
+                <span className="tabular-nums text-brass">{stats.stars}</span>
+                <span className="sr-only">{t({ en: 'GitHub stars', tr: 'GitHub yıldızı' })}</span>
+              </span>
+              {pushedMonth && (
+                <span className="inline-flex items-center gap-1.5">
+                  {t({ en: 'Updated', tr: 'Güncellendi' })}
+                  <span className="tabular-nums text-brass">{pushedMonth}</span>
+                </span>
+              )}
             </div>
           )}
-
-          <div className="mt-auto border-t border-rule pt-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <button
-                type="button"
-                onClick={() => onOpenLightbox(index, englishTitle(item))}
-                className="inline-flex items-center gap-2 text-sm text-paper-dim transition-colors hover:text-paper"
-              >
-                <i className="bi bi-zoom-in" aria-hidden="true"></i>
-                {t({ en: 'Preview', tr: 'Önizleme' })}
-              </button>
-              <a
-                href={item.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackOutbound('github', item.githubUrl, { project: englishTitle(item) })}
-                aria-label={t({
-                  en: `Open ${title} on GitHub`,
-                  tr: `${title} projesini GitHub'da aç`
-                })}
-                className="inline-flex items-center gap-2 rounded-sm border border-rule-strong px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:border-accent hover:text-accent"
-              >
-                <i className="bi bi-github" aria-hidden="true"></i>
-                {t({ en: 'Open on GitHub', tr: "GitHub'da aç" })}
-              </a>
-            </div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => onOpenLightbox(index, englishTitle(item))}
+              className="inline-flex items-center gap-2 text-sm text-paper-dim transition-colors hover:text-paper"
+            >
+              <i className="bi bi-zoom-in" aria-hidden="true"></i>
+              {t({ en: 'Preview', tr: 'Önizleme' })}
+            </button>
+            <a
+              href={item.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackOutbound('github', item.githubUrl, { project: englishTitle(item) })}
+              aria-label={t({
+                en: `Open ${title} on GitHub`,
+                tr: `${title} projesini GitHub'da aç`
+              })}
+              className="inline-flex items-center gap-2 rounded-sm border border-rule-strong px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:border-accent hover:text-accent"
+            >
+              <i className="bi bi-github" aria-hidden="true"></i>
+              {t({ en: 'Open on GitHub', tr: "GitHub'da aç" })}
+            </a>
           </div>
         </div>
-      </article>
-    </div>
+      </div>
+    </article>
   )
 }
 
-/** Isotope's filter syntax: everything, or the category class on the item. */
-const isotopeFilter = (key) => (key === '*' ? '*' : `.${key}`)
-
 const Portfolio = () => {
-  const { t, lang } = useLanguage()
-  const isotopeRef = useRef(null)
-  const isotopeInstanceRef = useRef(null)
-  const filterRef = useRef('*')
+  const { t } = useLanguage()
   const [filterKey, setFilterKey] = useState('*')
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
+  const [repoStats, setRepoStats] = useState({})
 
-  const refreshIsotope = () => {
-    if (isotopeInstanceRef.current) {
-      isotopeInstanceRef.current.layout()
-    }
-  }
-
-  // Masonry grid: the images decide the item heights, so wait for imagesLoaded
-  // before Isotope measures. StrictMode mounts twice and imagesLoaded is async,
-  // hence the cancelled guard — otherwise two instances share one node.
+  // Live repo figures from the public GitHub REST API, unauthenticated — the
+  // site is static and no token may ever reach the browser bundle.
+  //
+  // Unauthenticated calls are capped at 60 requests/hour/IP, so getting nothing
+  // back is entirely expected: a rate-limited, offline or blocked visitor just
+  // sees the cards without the extra line. Every failure stays silent — no
+  // error message, no console noise, no layout shift.
+  //
+  // The endpoint returns public repositories only, and only the star count and
+  // push timestamp are kept: no private or organisation repository name, and
+  // nothing but public aggregate numbers, ever reaches the page.
   useEffect(() => {
-    const el = isotopeRef.current
-    if (!el) return
+    const controller = new AbortController()
 
-    let cancelled = false
+    const loadRepoStats = async () => {
+      try {
+        const response = await fetch(
+          'https://api.github.com/users/Athena65/repos?per_page=100&sort=pushed',
+          { signal: controller.signal }
+        )
+        if (!response.ok) return
 
-    imagesLoaded(el, () => {
-      if (cancelled) return
-      isotopeInstanceRef.current = new Isotope(el, {
-        itemSelector: '.isotope-item',
-        layoutMode: 'masonry',
-        filter: isotopeFilter(filterRef.current)
-      })
-    })
+        const repos = await response.json()
+        if (!Array.isArray(repos) || controller.signal.aborted) return
 
-    return () => {
-      cancelled = true
-      if (isotopeInstanceRef.current) {
-        isotopeInstanceRef.current.destroy()
-        isotopeInstanceRef.current = null
+        const next = {}
+        for (const repo of repos) {
+          if (!repo || typeof repo.name !== 'string' || repo.private) continue
+          next[repo.name.toLowerCase()] = {
+            stars: repo.stargazers_count ?? 0,
+            pushedAt: repo.pushed_at
+          }
+        }
+        setRepoStats(next)
+      } catch {
+        // AbortError on unmount, a network failure or the hourly rate limit —
+        // all expected, all silent.
       }
     }
+
+    loadRepoStats()
+
+    return () => controller.abort()
   }, [])
-
-  // Filter through Isotope, not through React: every card stays mounted so the
-  // lightbox indexes keep matching. The ref carries the choice over to the
-  // constructor above when a tab is clicked before the images finish loading.
-  useEffect(() => {
-    filterRef.current = filterKey
-    if (isotopeInstanceRef.current) {
-      isotopeInstanceRef.current.arrange({ filter: isotopeFilter(filterKey) })
-    }
-  }, [filterKey])
-
-  // English and Turkish copy run to different lengths, and the language is
-  // detected after mount — re-run layout() a few times while the text settles.
-  useEffect(() => {
-    const timers = [50, 150, 300, 550].map((ms) => setTimeout(refreshIsotope, ms))
-    return () => timers.forEach(clearTimeout)
-  }, [lang])
 
   const lightboxSlides = portfolioItems.map((item) => ({
     src: item.image,
@@ -317,6 +343,10 @@ const Portfolio = () => {
     setFilterKey(key)
     trackEvent('filter_used', { section: 'projects', value: key === '*' ? 'all' : key })
   }
+
+  // Plain React filtering. `filter` hands back the very same objects held in
+  // portfolioItems, so indexOf below recovers each card's full-array position.
+  const visible = filterKey === '*' ? portfolioItems : portfolioItems.filter((i) => i.category === filterKey)
 
   const categories = [
     { label: { en: 'All', tr: 'Tümü' }, key: '*' },
@@ -358,18 +388,16 @@ const Portfolio = () => {
           aside={filterTabs}
         />
 
-        {/* Isotope masonry container — item widths live on the cards themselves */}
-        <div
-          ref={isotopeRef}
-          className="isotope-container flex flex-wrap"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
-          {portfolioItems.map((item, index) => (
+        {/* Plain CSS grid: the grid sizes every card, so rows always line up. */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up" data-aos-delay="200">
+          {visible.map((item) => (
             <PortfolioCard
               key={item.githubUrl}
               item={item}
-              index={index}
+              /* Position in the FULL array, so the lightbox opens the right
+                 slide whatever the active filter is. */
+              index={portfolioItems.indexOf(item)}
+              stats={repoStats[repoKeyFromUrl(item.githubUrl)]}
               onOpenLightbox={handleOpenLightbox}
             />
           ))}
