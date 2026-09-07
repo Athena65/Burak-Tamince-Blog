@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7TEN4EVFWS"></script>
     <script>
@@ -9,8 +12,6 @@
       gtag('js', new Date());
       gtag('config', 'G-7TEN4EVFWS');
     </script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/jpeg" href="/assets/img/bt-favicon.jpg" />
 
     <title>Burak Tamince | Full-Stack Developer &amp; Computer Engineer</title>
@@ -20,27 +21,48 @@
     />
     <meta
       name="keywords"
-      content="Burak Tamince, full-stack developer, computer engineer, Istanbul, ASP.NET Core, React, AWS, PHP, Moodle, Gedik University, software engineer, Rapidsol, Waytogo, DevOps, AI, portfolio"
+      content="buraktamince, Burak Tamince, burak tamince, buraktamince.net.tr, Burak Tamince portfolio, Burak Tamince developer, Burak Tamince yazilim, full-stack developer, computer engineer, Istanbul, ASP.NET Core, React, AWS, PHP, Moodle, Gedik University, software engineer, Rapidsol, Waytogo, DevOps, AI, portfolio"
     />
     <meta name="author" content="Burak Tamince" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#0A1418" />
     <meta name="color-scheme" content="dark light" />
     <meta name="format-detection" content="telephone=no" />
     <link rel="canonical" href="https://buraktamince.net.tr/" />
+    <link rel="alternate" hreflang="en" href="https://buraktamince.net.tr/" />
+    <link rel="alternate" hreflang="tr" href="https://buraktamince.net.tr/?lang=tr" />
+    <link rel="alternate" hreflang="x-default" href="https://buraktamince.net.tr/" />
+    <script>
+      /* ?lang=tr is a real URL (LanguageContext reads it) and the tr hreflang alternate
+         points at it. Without this, that alternate canonicalises back to "/" and search
+         engines drop the tr/x-default cluster. Static site: rewriting the rendered
+         canonical is the only lever available. */
+      try {
+        if ((new URLSearchParams(window.location.search).get('lang') || '').toLowerCase() === 'tr') {
+          var canonical = document.querySelector('link[rel="canonical"]');
+          if (canonical) canonical.setAttribute('href', 'https://buraktamince.net.tr/?lang=tr');
+        }
+      } catch (e) {
+        /* malformed query string; keep the static canonical */
+      }
+    </script>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Burak Tamince" />
     <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="tr_TR" />
     <meta property="og:title" content="Burak Tamince | Full-Stack Developer &amp; Computer Engineer" />
     <meta
       property="og:description"
       content="Full-stack developer building ASP.NET Core &amp; React apps, AWS cloud work, PHP/Moodle mentorship platforms, and AI integrations. Based in Istanbul, Türkiye."
     />
     <meta property="og:url" content="https://buraktamince.net.tr/" />
-    <meta property="og:image" content="https://buraktamince.net.tr/assets/img/profile-img.jpg" />
-    <meta property="og:image:alt" content="Burak Tamince — Computer Engineer and Full-Stack Developer" />
+    <meta property="og:image" content="https://buraktamince.net.tr/assets/img/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content="Burak Tamince — computer engineer and full-stack developer, buraktamince.net.tr" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Burak Tamince | Full-Stack Developer &amp; Computer Engineer" />
@@ -48,17 +70,28 @@
       name="twitter:description"
       content="Portfolio: full-stack development, AWS, ASP.NET Core, React, PHP/Moodle, AI — Istanbul."
     />
-    <meta name="twitter:image" content="https://buraktamince.net.tr/assets/img/profile-img.jpg" />
+    <meta name="twitter:image" content="https://buraktamince.net.tr/assets/img/og-card.png" />
+    <meta name="twitter:image:alt" content="Burak Tamince — computer engineer and full-stack developer" />
 
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "ProfilePage",
+            "@id": "https://buraktamince.net.tr/#profilepage",
+            "url": "https://buraktamince.net.tr/",
+            "name": "Burak Tamince",
+            "isPartOf": { "@id": "https://buraktamince.net.tr/#website" },
+            "about": { "@id": "https://buraktamince.net.tr/#person" },
+            "inLanguage": "en"
+          },
+          {
             "@type": "WebSite",
             "@id": "https://buraktamince.net.tr/#website",
             "url": "https://buraktamince.net.tr/",
             "name": "Burak Tamince — Portfolio",
+            "alternateName": ["buraktamince", "buraktamince.net.tr"],
             "description": "Professional portfolio of Burak Tamince, Computer Engineer and full-stack developer.",
             "inLanguage": "en",
             "publisher": { "@id": "https://buraktamince.net.tr/#person" }
@@ -67,6 +100,7 @@
             "@type": "Person",
             "@id": "https://buraktamince.net.tr/#person",
             "name": "Burak Tamince",
+            "alternateName": ["buraktamince", "burak tamince", "Burak Tamince"],
             "givenName": "Burak",
             "familyName": "Tamince",
             "url": "https://buraktamince.net.tr/",
@@ -120,11 +154,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
       rel="stylesheet"
     />
     <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>
