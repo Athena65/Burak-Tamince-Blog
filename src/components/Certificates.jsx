@@ -1,35 +1,42 @@
 import { useState } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
+import SectionHeader from './SectionHeader'
+import { useLanguage } from '../i18n/LanguageContext'
+import { trackEvent, trackOutbound } from '../utils/analytics'
 
 const Certificates = () => {
+  const { t } = useLanguage()
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
 
   const certificates = [
     {
-      title: 'Introduction to Cybersecurity',
+      title: { en: 'Introduction to Cybersecurity', tr: 'Siber Güvenliğe Giriş' },
       issuer: 'Cisco',
       image: '/assets/certificates/img/introduction-to-cybersecurity.png',
       verifyUrl: 'https://www.credly.com/badges/258d34dd-7b4e-4845-b78f-285cf1dec6ae/public_url',
       hasLink: true,
     },
     {
-      title: 'CCNA: Introduction to Networks',
+      title: { en: 'CCNA: Introduction to Networks', tr: 'CCNA: Ağlara Giriş' },
       issuer: 'Cisco',
       image: '/assets/certificates/img/ccna-introduction-to-networks.png',
       verifyUrl: 'https://www.credly.com/badges/ae74d60d-8b16-414a-b351-f08245ad375a/public_url',
       hasLink: true,
     },
     {
-      title: 'CCNA: Switching, Routing and Wireless Essentials',
+      title: {
+        en: 'CCNA: Switching, Routing and Wireless Essentials',
+        tr: 'CCNA: Anahtarlama, Yönlendirme ve Kablosuz Ağ Temelleri',
+      },
       issuer: 'Cisco',
       image: '/assets/certificates/img/ccna-switching-routing-and-wireless-essentials.1.png',
       verifyUrl: 'https://www.credly.com/badges/84862bff-8571-442a-904c-a53c84f626cb/public_url',
       hasLink: true,
     },
     {
-      title: 'Claude Code in Action',
+      title: { en: 'Claude Code in Action', tr: 'Claude Code in Action' },
       issuer: 'Anthropic',
       date: '04/04/2026',
       image: '/assets/certificates/img/claudeinaction-anthropic.png',
@@ -37,7 +44,7 @@ const Certificates = () => {
       hasLink: true,
     },
     {
-      title: 'Online Personal Development Summit',
+      title: { en: 'Online Personal Development Summit', tr: 'Çevrimiçi Kişisel Gelişim Zirvesi' },
       issuer: 'Digicertify',
       date: '15/12/2021',
       image: '/assets/certificates/img/girisim_zirvesi.png',
@@ -45,32 +52,58 @@ const Certificates = () => {
       hasLink: true,
     },
     {
-      title: 'Java Development',
-      description: 'Certification in Java Programming',
+      title: { en: 'Java training', tr: 'Java Eğitimi' },
+      issuer: 'TÜBİTAK BİLGEM YTE',
+      date: '14.10.2023',
+      description: {
+        en: 'TÜBİTAK BİLGEM YTE Bootcamp 2023 participation certificate.',
+        tr: 'TÜBİTAK BİLGEM YTE Bootcamp 2023 katılım sertifikası.',
+      },
       image: '/assets/certificates/img/javacert.jpg',
       hasLink: false,
     },
     {
-      title: 'Microservices Architecture',
-      description: 'Certification in Microservices Development',
+      title: { en: 'Microservice architectures training', tr: 'Mikroservis Mimarileri Eğitimi' },
+      issuer: 'TÜBİTAK BİLGEM YTE',
+      date: '15.10.2023',
+      description: {
+        en: 'TÜBİTAK BİLGEM YTE Bootcamp 2023 participation certificate.',
+        tr: 'TÜBİTAK BİLGEM YTE Bootcamp 2023 katılım sertifikası.',
+      },
       image: '/assets/certificates/img/mikroserviscert.jpg',
       hasLink: false,
     },
     {
-      title: 'UX Design',
-      description: 'Certification in User Experience Design',
+      title: {
+        en: 'User experience and usability training',
+        tr: 'Kullanıcı Deneyimi ve Kullanılabilirlik Eğitimi',
+      },
+      issuer: 'TÜBİTAK BİLGEM YTE',
+      date: '14.10.2023',
+      description: {
+        en: 'TÜBİTAK BİLGEM YTE Bootcamp 2023 participation certificate.',
+        tr: 'TÜBİTAK BİLGEM YTE Bootcamp 2023 katılım sertifikası.',
+      },
       image: '/assets/certificates/img/uxcert.jpg',
       hasLink: false,
     },
     {
-      title: 'University Ranking Achievements',
-      description: 'Official document showcasing academic excellence and university ranking',
+      title: { en: 'University ranking awards', tr: 'Üniversite derece ödülleri' },
+      issuer: 'İstanbul Gedik Üniversitesi',
+      date: '2025',
+      description: {
+        en: 'Three 2025 awards: first in the Computer Engineering department, first in the Faculty of Engineering, and third across the university.',
+        tr: '2025 yılına ait üç ödül: Bilgisayar Mühendisliği bölüm birinciliği, Mühendislik Fakültesi birinciliği ve üniversite üçüncülüğü.',
+      },
       image: '/assets/certificates/img/ranks.jpeg',
       hasLink: false,
     },
     {
-      title: 'AI Training Participation Certificate',
-      description: 'Gebze Technical University & SEM – AI Training participation certificate',
+      title: { en: 'AI Training Participation Certificate', tr: 'Yapay Zekâ Eğitimi Katılım Sertifikası' },
+      description: {
+        en: 'Gebze Technical University & SEM – AI Training participation certificate',
+        tr: 'Gebze Teknik Üniversitesi ve SEM Yapay Zekâ Eğitimi katılım sertifikası',
+      },
       image: '/assets/certificates/img/ai-certificate-bt.jpeg',
       hasLink: false,
     },
@@ -83,87 +116,102 @@ const Certificates = () => {
 
   const lightboxSlides = certificates.map(cert => ({
     src: cert.image,
-    title: cert.title,
-    description: cert.description || cert.issuer
+    title: t(cert.title),
+    description: t(cert.description) || cert.issuer
   }))
 
   return (
-    <section id="certificates" className="certificates section relative overflow-hidden rounded-xl border border-white/10 bg-black/50 py-24 shadow-2xl backdrop-blur-md">
-      {/* Background Glows */}
-      <div className="absolute -left-24 top-0 h-96 w-96 rounded-full bg-accent/10 blur-[120px]"></div>
-      <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-blue-500/5 blur-[120px]"></div>
+    <section id="certificates" className="certificates section relative border-t border-rule py-20 md:py-28">
+      <div className="container">
+        <SectionHeader
+          title={t({ en: 'Certificates', tr: 'Sertifikalar' })}
+          deck={t({
+            en: 'Industry certifications and academic records. Cisco, Anthropic and Digicertify certificates verify online; the others open as images.',
+            tr: 'Sektör sertifikaları ve akademik belgeler. Cisco, Anthropic ve Digicertify sertifikaları çevrimiçi doğrulanır; diğerleri görsel olarak açılır.',
+          })}
+        />
 
-      <div className="container relative z-10 mx-auto px-4">
-        <div className="section-title mb-16 text-center" data-aos="fade-up">
-          <h2 className="relative mb-6 inline-block pb-4 text-4xl font-extrabold tracking-tight text-white uppercase">
-            Certificates
-            <span className="absolute bottom-0 left-1/2 h-[4px] w-[80px] -translate-x-1/2 rounded-full bg-gradient-to-r from-accent to-blue-500"></span>
-          </h2>
-          <p className="mx-auto max-w-3xl text-lg text-white/70 leading-relaxed">
-            Professional honors and industry certifications validating my technical expertise and commitment to
-            excellence in cybersecurity and software engineering.
-          </p>
-        </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up" data-aos-delay="100">
+          {certificates.map((cert, index) => {
+            const title = t(cert.title)
+            const description = t(cert.description)
 
-        <div className="flex flex-wrap" data-aos="fade-up" data-aos-delay="100">
-          {certificates.map((cert, index) => (
-            <div key={index} className="w-full p-3 md:w-1/2 lg:w-1/3 group">
-              <div className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-500 hover:border-accent/30 hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2">
-                {/* Image Container */}
-                <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl bg-black/20 p-4">
+            return (
+              <article
+                key={index}
+                className="group flex flex-col rounded-none border border-rule bg-ink-2/60 transition-colors duration-300 hover:border-accent/60 hover:bg-ink-2"
+              >
+                {/* Document image — click to open it full size */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    trackEvent('lightbox_open', { section: 'certificates', item: cert.title.en })
+                    handleImageClick(index)
+                  }}
+                  aria-label={t({ en: `View ${title} full size`, tr: `Tam boyutta gör: ${title}` })}
+                  className="relative block aspect-[4/3] w-full overflow-hidden bg-ink-3/60 p-5"
+                >
                   <img
                     src={cert.image}
-                    className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-110"
-                    alt={cert.title}
+                    className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.04]"
+                    alt={title}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40"></div>
-                </div>
-
-                {/* Card Content */}
-                <div className="flex flex-col p-6">
-                  <span className="mb-2 text-[10px] font-bold uppercase tracking-widest text-accent">
-                    {cert.issuer || 'Official Certification'}
+                  {/* Hover veil with a zoom cue */}
+                  <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/70 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <span className="inline-flex items-center gap-2 rounded-sm border border-rule-strong bg-ink-2 px-3 py-1.5 text-sm font-medium text-paper">
+                      <i className="bi bi-arrows-fullscreen" aria-hidden="true"></i>
+                      {t({ en: 'View full size', tr: 'Tam boyutta gör' })}
+                    </span>
                   </span>
-                  <h4 className="mb-3 text-lg font-bold text-white group-hover:text-accent transition-colors duration-300">
-                    {cert.title}
-                  </h4>
-                  {cert.description && (
-                    <p className="mb-4 text-sm text-white/60 line-clamp-2">
-                      {cert.description}
-                    </p>
-                  )}
-                  {cert.date && (
-                    <div className="mb-4 flex items-center gap-2 text-xs text-white/40">
-                      <i className="bi bi-calendar3"></i>
-                      <span>Issued: {cert.date}</span>
-                    </div>
-                  )}
+                </button>
 
-                  <div className="mt-auto flex gap-3 pt-4 border-t border-white/5">
+                {/* Document body */}
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="space-y-2 pb-5">
+                    <p className="text-sm text-paper-mute">{cert.issuer || t({ en: 'Certificate', tr: 'Sertifika' })}</p>
+                    <h3 className="font-display stretch-normal font-semibold text-lg md:text-xl leading-snug text-paper tracking-tight transition-colors duration-300 group-hover:text-accent">
+                      {title}
+                    </h3>
+                    {description && (
+                      <p className="text-sm text-paper-dim">{description}</p>
+                    )}
+                    {cert.date && (
+                      <p className="text-sm text-paper-mute">
+                        {t({ en: 'Issued', tr: 'Veriliş' })} <span className="text-brass tabular-nums">{cert.date}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-auto border-t border-rule pt-4">
                     {cert.hasLink ? (
                       <a
                         href={cert.verifyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-accent/20 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-accent hover:shadow-lg hover:shadow-accent/40"
+                        onClick={() => trackOutbound('certificate', cert.verifyUrl, { certificate: cert.title.en })}
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-accent px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-accent-300"
                       >
-                        Verify
-                        <i className="bi bi-patch-check"></i>
+                        {t({ en: 'Verify certificate', tr: 'Sertifikayı doğrula' })}
+                        <i className="bi bi-box-arrow-up-right" aria-hidden="true"></i>
                       </a>
                     ) : (
                       <button
-                        onClick={() => handleImageClick(index)}
-                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-white/20"
+                        type="button"
+                        onClick={() => {
+                          trackEvent('lightbox_open', { section: 'certificates', item: cert.title.en })
+                          handleImageClick(index)
+                        }}
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm border border-rule-strong px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:border-accent hover:text-accent"
                       >
-                        View Image
-                        <i className="bi bi-eye"></i>
+                        {t({ en: 'View certificate', tr: 'Sertifikayı görüntüle' })}
+                        <i className="bi bi-eye" aria-hidden="true"></i>
                       </button>
                     )}
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </article>
+            )
+          })}
         </div>
       </div>
 
@@ -182,4 +230,3 @@ const Certificates = () => {
 }
 
 export default Certificates
-

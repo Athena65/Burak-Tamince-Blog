@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — Burak Tamince</title>
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0A1418" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" type="image/jpeg" href="/assets/img/bt-favicon.jpg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --ink: #0a1418;
+        --paper: #e6eff1;
+        --paper-dim: #a3b5bb;
+        --accent: #2ec4b6;
+        --rule: #1e3843;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        background-color: var(--ink);
+        color: var(--paper);
+        font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+        font-size: 16px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        max-width: 62ch;
+        padding: clamp(3rem, 12vh, 8rem) clamp(1.25rem, 6vw, 5rem);
+      }
+
+      .code {
+        margin: 0;
+        font-family: Archivo, 'IBM Plex Sans', system-ui, sans-serif;
+        font-stretch: 112%;
+        font-weight: 700;
+        font-size: clamp(4.5rem, 18vw, 9rem);
+        line-height: 1;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+        color: var(--paper);
+      }
+
+      hr {
+        height: 0;
+        margin: clamp(2rem, 6vh, 3.5rem) 0;
+        border: 0;
+        border-top: 1px solid var(--rule);
+      }
+
+      .block + .block {
+        margin-top: clamp(2rem, 5vh, 3rem);
+      }
+
+      .block p {
+        margin: 0 0 0.75rem;
+        color: var(--paper-dim);
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        text-underline-offset: 4px;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+
+      <hr />
+
+      <div class="block" lang="en">
+        <p>This page does not exist.</p>
+        <a href="/">Go to the homepage</a>
+      </div>
+
+      <div class="block" lang="tr">
+        <p>Bu sayfa bulunamadı.</p>
+        <a href="/">Ana sayfaya dön</a>
+      </div>
+    </main>
+  </body>
+</html>
