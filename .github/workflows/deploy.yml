@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  # Daily rebuild so the GitHub panel's numbers stay current without any commit.
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -35,6 +39,14 @@ jobs:
           if [ -d "./assets" ]; then
             cp -r ./assets/* ./public/assets/ 2>/dev/null || true
           fi
+
+      # Writes public/data/github-stats.json straight into the build. Nothing is
+      # committed, so the branch ruleset on main is never involved, and the
+      # script exits 0 on failure so a stats hiccup can never fail a deploy.
+      - name: Refresh GitHub stats
+        env:
+          GH_TOKEN: ${{ secrets.GH_STATS_TOKEN || github.token }}
+        run: node scripts/fetch-github-stats.mjs
 
       - name: Build
         run: npm run build

@@ -131,7 +131,7 @@ const Certificates = () => {
           })}
         />
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up" data-aos-delay="100">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 min-[1900px]:grid-cols-4" data-aos="fade-up" data-aos-delay="100">
           {certificates.map((cert, index) => {
             const title = t(cert.title)
             const description = t(cert.description)

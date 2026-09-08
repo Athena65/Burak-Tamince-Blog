@@ -58,7 +58,9 @@ test.describe('language switch', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'tr')
     await expect(page.locator('#hero').getByText(TR_HERO_DECK)).toBeVisible()
     await expect(
-      page.locator('section#portfolio').getByRole('heading', { name: 'Projeler', level: 2 }),
+      page
+        .locator('section#portfolio')
+        .getByRole('heading', { name: 'GitHub Projeleri', level: 2, exact: true }),
     ).toBeVisible()
   })
 })

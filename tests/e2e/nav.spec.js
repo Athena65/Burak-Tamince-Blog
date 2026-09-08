@@ -45,7 +45,9 @@ test.describe('navigation', () => {
     const closeToggle = page.getByRole('button', { name: /Close menu|Menüyü kapat/ })
     await expect(closeToggle).toHaveAttribute('aria-expanded', 'true')
 
-    const link = page.locator('#navmenu').getByRole('link', { name: 'Projects', exact: true })
+    const link = page
+      .locator('#navmenu')
+      .getByRole('link', { name: /^(GitHub Projects|GitHub Projeleri)$/ })
     await expect(link).toBeVisible()
     await link.click()
 

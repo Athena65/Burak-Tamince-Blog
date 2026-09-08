@@ -14,7 +14,7 @@ const Header = () => {
     { id: 'skills', icon: 'bi-briefcase', label: { en: 'Experience & Skills', tr: 'Deneyim ve yetenekler' } },
     { id: 'certificates', icon: 'bi-award', label: { en: 'Certificates', tr: 'Sertifikalar' } },
     { id: 'resume', icon: 'bi-file-earmark-text', label: { en: 'Resume', tr: 'Özgeçmiş' } },
-    { id: 'portfolio', icon: 'bi-images', label: { en: 'Projects', tr: 'Projeler' } },
+    { id: 'portfolio', icon: 'bi-github', label: { en: 'GitHub Projects', tr: 'GitHub Projeleri' } },
     { id: 'videos', icon: 'bi-youtube', label: { en: 'Videos', tr: 'Videolar' } },
   ]
 

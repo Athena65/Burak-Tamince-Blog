@@ -12,3 +12,6 @@ dist-ssr
 test-results
 playwright-report
 .playwright
+
+# Dev server log written by the SessionStart hook
+.claude/dev-server.log

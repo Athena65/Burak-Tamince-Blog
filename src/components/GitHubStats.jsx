@@ -14,6 +14,14 @@ const GAP = 3
 const STEP = CELL + GAP
 const ROWS = 7
 const LABEL_H = 16
+const GUTTER = 30
+
+// GitHub labels alternate rows only, so the column stays readable.
+const WEEKDAY_ROWS = [
+  { row: 1, label: { en: 'Mon', tr: 'Pzt' } },
+  { row: 3, label: { en: 'Wed', tr: 'Çar' } },
+  { row: 5, label: { en: 'Fri', tr: 'Cum' } },
+]
 
 /**
  * Group a chronological day list into GitHub-style week columns.
@@ -147,7 +155,7 @@ const GitHubStats = () => {
     return {
       weeks,
       ticks: monthTicks(weeks, formatter),
-      width: weeks.length * STEP,
+      width: GUTTER + weeks.length * STEP,
       height: ROWS * STEP + LABEL_H,
       activeDays: days.filter((d) => d.count > 0).length,
       best: days.reduce((a, b) => (b.count > a.count ? b : a), days[0]),
@@ -161,6 +169,15 @@ const GitHubStats = () => {
   const languageTotal = languages.reduce((sum, l) => sum + l.count, 0)
 
   const dayLabel = new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' })
+
+  const dayTooltip = (day) => {
+    const when = dayLabel.format(new Date(`${day.date}T00:00:00Z`))
+    if (day.count === 0) return t({ en: `No contributions on ${when}`, tr: `${when} tarihinde katkı yok` })
+    return t({
+      en: `${day.count} ${day.count === 1 ? 'contribution' : 'contributions'} on ${when}`,
+      tr: `${when} tarihinde ${day.count} katkı`,
+    })
+  }
 
   return (
     <div
@@ -191,15 +208,14 @@ const GitHubStats = () => {
         <div className="mt-8 border-t border-rule pt-6">
           <div className="overflow-x-auto pb-1">
             <svg
-              width={chart.width}
-              height={chart.height}
               viewBox={`0 0 ${chart.width} ${chart.height}`}
+              preserveAspectRatio="xMidYMid meet"
               role="img"
               aria-label={t({
                 en: `${totalContributions} contributions over the last year, across ${chart.activeDays} active days.`,
                 tr: `Son bir yılda ${chart.activeDays} aktif günde ${totalContributions} katkı.`,
               })}
-              className="block"
+              className="block h-auto w-full min-w-[34rem]"
             >
               <title>
                 {t({ en: 'Contribution calendar', tr: 'Katkı takvimi' })}
@@ -208,7 +224,7 @@ const GitHubStats = () => {
               {chart.ticks.map((tick) => (
                 <text
                   key={tick.index}
-                  x={tick.index * STEP}
+                  x={GUTTER + tick.index * STEP}
                   y={11}
                   fill="#6E8590"
                   fontSize="10"
@@ -218,19 +234,34 @@ const GitHubStats = () => {
                 </text>
               ))}
 
+              {WEEKDAY_ROWS.map((day) => (
+                <text
+                  key={day.row}
+                  x={0}
+                  y={LABEL_H + day.row * STEP + CELL - 1}
+                  fill="#6E8590"
+                  fontSize="10"
+                  fontFamily="inherit"
+                >
+                  {t(day.label)}
+                </text>
+              ))}
+
               {chart.weeks.map((week, x) =>
                 week.map((day, y) =>
                   day ? (
                     <rect
                       key={day.date}
-                      x={x * STEP}
+                      x={GUTTER + x * STEP}
                       y={LABEL_H + y * STEP}
                       width={CELL}
                       height={CELL}
                       rx="2"
                       fill={LEVEL_COLORS[day.level] || LEVEL_COLORS[0]}
+                      strokeWidth="1.5"
+                      className="stroke-transparent transition-colors duration-150 hover:stroke-paper"
                     >
-                      <title>{`${day.count} — ${dayLabel.format(new Date(`${day.date}T00:00:00Z`))}`}</title>
+                      <title>{dayTooltip(day)}</title>
                     </rect>
                   ) : null,
                 ),
