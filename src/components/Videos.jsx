@@ -145,7 +145,7 @@ const Videos = () => {
           aside={filterTabs}
         />
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up" data-aos-delay="200">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 min-[1900px]:grid-cols-4" data-aos="fade-up" data-aos-delay="200">
           {filteredVideos.length > 0 ? (
             filteredVideos.map((video) => (
               <VideoCard key={`${activeCategory}-${video.youtubeId}`} video={video} />

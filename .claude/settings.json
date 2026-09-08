@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "async": true,
+            "timeout": 30,
+            "statusMessage": "Starting the dev server",
+            "command": "curl -s -o /dev/null --max-time 3 http://localhost:5173/ || { cd \"${CLAUDE_PROJECT_DIR:-.}\" && mkdir -p .claude && nohup npm run dev -- --port 5173 --strictPort >> .claude/dev-server.log 2>&1 & }"
+          }
+        ]
+      }
+    ]
+  }
+}

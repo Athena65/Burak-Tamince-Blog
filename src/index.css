@@ -187,7 +187,8 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1360px;
+  /* rem, not px, so the column grows with the root size on very large screens */
+  max-width: var(--container-max, 85rem);
   margin-left: auto;
   margin-right: auto;
   padding-left: 1.25rem;
@@ -201,13 +202,57 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* The rail is docked to the left edge here, so the column reserves room for it. */
 @media (min-width: 1280px) {
+  :root {
+    --container-max: 93.75rem;
+  }
+
   .container {
-    max-width: 1500px;
     padding-left: 140px !important;
     padding-right: 3rem !important;
   }
+}
 
+/* Past this width the centred column already clears the rail on its own, so the
+   asymmetric padding can go and the content sits optically centred again. The
+   rail moves in beside the column instead of stranding itself at the far edge. */
+@media (min-width: 1900px) {
+  :root {
+    --container-max: 97.5rem;
+  }
+
+  .container {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+
+  #header {
+    left: max(0px, calc((100vw - var(--container-max)) / 2 - 8.75rem));
+  }
+}
+
+/* Nothing above scales type, so on very large displays the whole page is sized
+   up through the root font: every rem-based size, gap and measure follows. */
+@media (min-width: 2400px) {
+  :root {
+    font-size: 17px;
+    --container-max: 105rem;
+  }
+}
+
+@media (min-width: 3000px) {
+  :root {
+    font-size: 18px;
+    --container-max: 112rem;
+  }
+}
+
+@media (min-width: 3600px) {
+  :root {
+    font-size: 19px;
+    --container-max: 118rem;
+  }
 }
 
 #footer {

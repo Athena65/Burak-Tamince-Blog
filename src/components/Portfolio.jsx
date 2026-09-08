@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import SectionHeader from './SectionHeader'
+import GitHubStats from './GitHubStats'
 import { useLanguage } from '../i18n/LanguageContext'
 import { trackEvent, trackOutbound } from '../utils/analytics'
 
@@ -380,7 +381,7 @@ const Portfolio = () => {
     <section id="portfolio" className="portfolio section relative border-t border-rule py-20 md:py-28">
       <div className="container">
         <SectionHeader
-          title={t({ en: 'Projects', tr: 'Projeler' })}
+          title={t({ en: 'GitHub Projects', tr: 'GitHub Projeleri' })}
           deck={t({
             en: `${portfolioItems.length} repositories on GitHub, from an Arduino binary converter to a Laravel storefront and a YOLOv8 product matcher.`,
             tr: `GitHub'da ${portfolioItems.length} depo: Arduino ile ikili sayı çeviricisinden Laravel mağazasına ve YOLOv8 ürün eşleştiricisine uzanıyor.`
@@ -388,8 +389,10 @@ const Portfolio = () => {
           aside={filterTabs}
         />
 
+        <GitHubStats />
+
         {/* Plain CSS grid: the grid sizes every card, so rows always line up. */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up" data-aos-delay="200">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 min-[1900px]:grid-cols-4" data-aos="fade-up" data-aos-delay="200">
           {visible.map((item) => (
             <PortfolioCard
               key={item.githubUrl}

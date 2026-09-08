@@ -98,58 +98,76 @@ Eski hâli jenerik "siyah zemin + tek mavi vurgu + her bölüm aynı cam kart" k
 
 ## Devam eden / bekleyen
 
-### GitHub bölümü — DURDURULDU, siteye eklenmedi (kullanıcı kararı)
-Dosyalar diskte hazır duruyor, sadece **bağlantısı kesildi**. Devam edilecek yer burası.
+### GitHub paneli — ✅ EKLENDİ VE YAYINDA HAZIR
+Ayrı bölüm açılmadı. Panel, **Projects bölümünün içine**, başlığın hemen altına gömüldü.
 
-Mevcut dosyalar:
-| Dosya | Durum |
-|---|---|
-| `public/data/github-stats.json` | ✅ **Gerçek veriyle dolu**: 366 gün katkı takvimi, 159 katkı, 33 aktif gün, 33 repo, 39 yıldız, 8 dil |
-| `src/components/GitHubStats.jsx` | ✅ Yeni **panel** sürümü (ayrı bölüm değil). Katkı ısı haritası (SVG, 53 hafta × 7 gün), 4 rakam, oransal dil çubuğu + lejant, profil bağlantısı. Henüz hiçbir yerden import edilmiyor |
-| `src/components/GitHubActivity.jsx` | ⚠️ Eski **bölüm** sürümü (491 satır). Kullanılmıyor; `GitHubStats.jsx` bunun yerini alacak, silinebilir |
-| `.github/workflows/github-stats.yml` | ⚠️ Ajan oturum limitine takıldığı için **doğrulanmadı**. Çalıştırmadan önce YAML ve node script'i gözden geçir |
+- `src/components/GitHubStats.jsx` — GitHub'ın kendi katkı takvimine benzeyen SVG ısı haritası: üstte ay etiketleri, solda Pzt/Çar/Cum, 5 kademeli turkuaz (`#132630 → #67D9CF`), "Az → Çok" lejantı, "En yoğun gün".
+  - **Tam genişlik:** svg sabit piksel yerine `viewBox` + `w-full h-auto` ile kapsayıcıya ölçekleniyor; yıl dolmamış olsa da yatayda tamamen yayılır, en yeni hafta hep sağa yaslı kalır, hücreler veri miktarına göre büyür/küçülür. Dar ekranlarda `min-w-[34rem]` ile kaydırılır.
+  - **Hover:** her hücre üzerine gelince `stroke-paper` ile ince çerçeve çıkar; native `<title>` tooltip'i katkı sayısı ve tarihi gösterir. Üstte 4 rakam (herkese açık depo, alınan yıldız, bu yılki katkı, aktif gün), altta oransal dil çubuğu + lejant, profil bağlantısı. Tümü iki dilli.
+- `Portfolio.jsx` başlığı → **GitHub Projects / GitHub Projeleri**; `Header.jsx` nav etiketi ve ikonu (`bi-github`) da aynı
+- `GitHubActivity.jsx` **silindi** (eski ayrı-bölüm sürümü)
+- `public/data/github-stats.json` — 367 gün, 165 katkı, 33 aktif gün, 33 repo, 39 yıldız, 8 dil
 
-Bağlantısı kesilen yerler (geri açmak için):
-- `src/App.jsx` — `GitHubActivity` import'u ve `<GitHubActivity />` satırı **silindi**
-- `src/components/Header.jsx` — `{ id: 'github', … }` nav öğesi **silindi**
+### Geniş ekran responsive düzeltmesi — ✅
+Çok büyük ekranlarda düzen donuyordu. Ölçülen kusurlar ve sonrası:
 
-**Kullanıcının istediği son tasarım kararı (henüz uygulanmadı):**
-- Ayrı "GitHub" başlığı/bölümü **olmayacak** — nav item ve ana alan şişiyor
-- Projects bölümünün başlığı **"GitHub Projects" / "GitHub Projeleri"** olacak
-- İstatistik paneli o bölümün **en üstünde** yer alacak
-- Görsel olarak daha zengin olmalı; ilk hâli fazla sadeydi (ısı haritası `days: []` olduğu için hiç çizilmiyordu — bu artık düzeldi)
+| Genişlik | Önce içerik | Sonra içerik | Önce boşluk (sol/sağ) | Sonra |
+|---|---|---|---|---|
+| 1600px | 1312px | 1312px | 190 / 98 | aynı |
+| 1920px | 1312px | **1464px** | 350 / 258 | **228 / 228** |
+| 2560px | 1312px | **1556px** | 670 / 578 | **502 / 502** |
+| 3840px | 1312px | **1739px** | 1310 / 1218 | **1051 / 1051** |
 
-Yapılacaklar:
-1. `Portfolio.jsx` içine `import GitHubStats from './GitHubStats'` ekle, `SectionHeader`'dan hemen sonra render et
-2. `Portfolio.jsx`'te `SectionHeader` başlığını `t({ en: 'GitHub Projects', tr: 'GitHub Projeleri' })` yap
-3. `Header.jsx`'te `portfolio` nav etiketini `{ en: 'GitHub Projects', tr: 'GitHub Projeleri' }` yap
-4. `GitHubActivity.jsx`'i sil
-5. `github-stats.yml`'i gözden geçir, sonra PAT adımlarını uygula
+Üç kök sebep, `src/index.css` içinde çözüldü:
+1. **Kolon büyümüyordu** — `max-width` sabit `1500px` idi. `--container-max` CSS değişkenine ve **rem** birimine geçirildi, böylece kök yazı tipiyle birlikte büyüyor.
+2. **Kenar boşlukları asimetrikti** — rail için ayrılan `padding-left: 140px`, ortalanmış kolonu ~90px sağa kaydırıyordu. `min-width: 1900px` üzerinde (ortalama zaten rail'i temizlediği noktada) padding simetrik hâle geliyor.
+3. **Tipografi ölçeklenmiyordu** — 2400 / 3000 / 3600px kırılımlarında kök yazı tipi 17 / 18 / 19px'e çıkıyor; rem tabanlı tüm boyut, boşluk ve `62ch` ölçüsü bunu takip ediyor. h1 116px → 138px.
 
-### Playwright testleri — KURULDU, ÇALIŞTIRILMADI
-Ajan oturum limitine takılmadan önce kurulumu ve test dosyalarını yazmayı bitirmiş; **testler hiç çalıştırılmadı, sonuçları bilinmiyor.**
+Ayrıca rail (`#header`) 1900px üzerinde `left: max(0px, calc((100vw - var(--container-max)) / 2 - 8.75rem))` ile içeriğin yanına geliyor; 4K'da 1000px uzakta öksüz kalmıyor (ölçüldü: içerikle arası 45px).
 
-Mevcut:
-- `playwright.config.js` (proje kökünde)
-- `tests/e2e/` — `site`, `nav`, `i18n`, `analytics`, `portfolio`, `certificates`, `resume`, `a11y`, `seo` spec'leri + `helpers.js`
-- `package.json` → `"test": "playwright test"`, `"test:ui": "playwright test --ui"`, devDependency `@playwright/test ^1.63.0`
-- `.gitignore` → `test-results`, `playwright-report`, `.playwright` eklendi
-- `node_modules/@playwright/test` kurulu
+4. **Kartlar hep 3 sütundaydı** — `lg:grid-cols-3` 1024px'ten 4K'ya kadar değişmiyordu, kartlar 561px'e kadar şişiyordu. Portfolio, Certificates ve Videos ızgaralarına `min-[1900px]:grid-cols-4` eklendi. Ayrıca `--container-max` 2400/3000/3600px kırılımlarında 105/112/118rem'e çıkarıldı.
 
-Yapılacak ilk iş:
-```bash
-npx playwright install chromium   # tarayıcı binary'si kurulu olmayabilir
-npm test
+Son ölçüm (3840px): içerik **2128px** (ekranın %55'i, önce %34), kartlar **4 sütunda 511px**.
+
+**Regresyon testi:** `tests/e2e/wide.spec.js` — kolon büyümesi, simetrik boşluk (1920/2560/3840), kök yazı tipi ölçeklenmesi, rail konumu, 4. sütunun 2560px'te açılıp 1536px'te açılmaması, 5 genişlikte yatay taşma. Mobil projede atlanıyor. Dar ekranlarda (360–1280px) taşma olmadığı ayrıca doğrulandı.
+
+### Dev server hook — ✅ KURULDU
+`.claude/settings.json` → `SessionStart` hook. Claude Code bu projede açıldığında dev server kendiliğinden **arka planda** kalkar (`async: true`, oturumu bloklamaz).
+
 ```
-Sonra her hatayı tek tek değerlendir: **test mi yanlış, site mi?** Testi zayıflatarak geçirme. Not: `portfolio.spec.js` Isotope'lu eski yapıya göre yazılmış olabilir (grid'e geçiş sonradan yapıldı) ve `analytics.spec.js` `window.__btEvents` üzerinden doğruluyor.
+curl -s -o /dev/null --max-time 3 http://localhost:5173/ || { cd "${CLAUDE_PROJECT_DIR:-.}" && mkdir -p .claude && nohup npm run dev -- --port 5173 --strictPort >> .claude/dev-server.log 2>&1 & }
+```
+
+- Adres her zaman **http://localhost:5173/** (`--strictPort` ile sabit).
+- Zaten çalışıyorsa ikinci süreç açmaz; `--strictPort` ikinci bir koruma katmanı.
+- **Önemli ayrıntı:** vite bu makinede `::1` (IPv6) üzerine bağlanıyor, `127.0.0.1` cevap vermiyor. Kontrol bu yüzden `localhost` ile yapılıyor — `127.0.0.1` kullanılırsa hook her seferinde yeniden başlatmaya çalışır. (Playwright config'i de bu yüzden `--host 127.0.0.1` ile açıkça IPv4'e sabitliyor.)
+- Log: `.claude/dev-server.log` (`.gitignore`'a eklendi).
+- Doğrulandı: kapalıyken başlattı, açıkken hiçbir şey yapmadı (log boş kaldı).
+
+### Deploy düzeltmesi — ✅ A SEÇENEĞİ UYGULANDI
+`github-stats.yml` **silindi** (branch ruleset'i yüzünden `git push` reddediliyordu, her gün başarısız olacaktı). Yerine:
+
+- `scripts/fetch-github-stats.mjs` — JSON'u üretir. GraphQL ile takvim (token varsa), REST ile repo/yıldız/dil. **Hiçbir hata deploy'u düşürmez** (her yol try/catch, çıkış kodu 0).
+- `deploy.yml` — `Build` adımından önce `Refresh GitHub stats` adımı eklendi, `GH_TOKEN: secrets.GH_STATS_TOKEN || github.token`. Ayrıca günlük `schedule` (03:17 UTC) + `workflow_dispatch` eklendi.
+- **Commit yok** → ruleset hiç devreye girmiyor, PR gürültüsü yok, her deploy'da taze veri.
+- Script mevcut takvimi **korur**: API bir kez hata verse bile ısı haritası kaybolmaz (yerelde 403 rate limit ile doğrulandı — dosya bozulmadı).
+- **PAT gerekmiyor.** `github.token` katkı takvimini okuyabiliyor (run 34132003744 kanıtı). Gerekirse `GH_STATS_TOKEN` secret'ı opsiyonel olarak devreye girer.
+
+### Playwright testleri — ✅ KURULDU VE GEÇTİ
+`npx playwright install chromium && npx vite build && npm test` çalıştırıldı: **66 passed, 0 failed** (mobil projede atlanan geniş ekran testleriyle birlikte).
+GitHub paneli eklendikten sonra iki test eskimişti (nav ve i18n hâlâ `Projects`/`Projeler` arıyordu) — **testler** yeni `GitHub Projects` / `GitHub Projeleri` etiketine göre düzeltildi, site değiştirilmedi.
+İki atlama doğru: masaüstü rail testi mobil projede, mobil menü testi masaüstü projesinde atlanıyor.
+
+- `playwright.config.js` — iki proje: `desktop` (1280×800) ve `mobile` (390×844), ikisi de chromium. `webServer` `vite preview --port 4173 --host 127.0.0.1` (IPv4'e sabitleme şart, yoksa Node `localhost`'u ::1'e çözüyor). **Testler `dist/`'i sunar — src değiştiyse önce `npx vite build`.**
+- `tests/e2e/` — `site`, `nav`, `i18n`, `analytics`, `portfolio`, `certificates`, `resume`, `a11y`, `seo` + `helpers.js`
+- Doğrulananlar: 8 bölümün hepsi render oluyor, konsol hatası yok, dil değişimi + `localStorage` kalıcılığı + `?lang=tr`, analytics olayları (`window.__btEvents`), 7 proje + filtre + özelliklerin toggle'sız görünürlüğü, 10 sertifika + lightbox + Escape, CV indirme bağlantısı, **hover önizlemesinin kırpılmadığı (≥200px)**, tek h1, tüm görsellerde alt, ikon butonlarda erişilebilir ad, 390px'te yatay taşma yok, og:image 1200×630 gerçekten sunuluyor, JSON-LD ayrışıyor
+
+Komut: `npm test` (veya `npm run test:ui`)
 
 ### Senin yapman gerekenler
 1. **`main`'e merge** — canlı güncellensin (deploy sadece `main`'de tetiklenir)
-2. **PAT** (GitHub bölümüne devam edince): workflow önce Actions'ın kendi `GITHUB_TOKEN`'ını dener. Katkı takvimi boş gelirse:
-   - GitHub → Settings → Developer settings → Personal access tokens → **Tokens (classic)**
-   - **Sadece `read:user`** scope'u, 90 gün (fine-grained token'lar `contributionsCollection`'ı güvenilir desteklemiyor)
-   - Repo → Settings → Secrets and variables → Actions → New repository secret → ad: **`GH_STATS_TOKEN`**
-   - Repo → Settings → Actions → General → Workflow permissions → **Read and write**
+2. ~~PAT oluştur~~ — **GEREKMİYOR.** Actions'ın kendi token'ı katkı takvimini okuyabildi (run 34132003744 kanıtı). `GH_STATS_TOKEN` secret'ı eklemene gerek yok.
+3. ~~github-stats.yml için seçim yap~~ — **çözüldü**, A seçeneği uygulandı.
 
 ---
 
